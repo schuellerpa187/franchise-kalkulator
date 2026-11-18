@@ -374,7 +374,18 @@
     border-bottom: 1px solid #f3f4f6;
     font-weight: 500;
   }
-  .compare-table td:first-child { text-align: left; font-weight: 600; color: #374151; }
+  .compare-table td:first-child { text-align: left; font-weight: 600; color: #374151; cursor: text; }
+  .compare-table td:first-child:hover { color: #1d4ed8; }
+  .compare-table .name-edit {
+    border: none;
+    outline: none;
+    background: transparent;
+    font: inherit;
+    color: inherit;
+    width: 100%;
+    min-width: 80px;
+    cursor: text;
+  }
   .compare-table tr:last-child td { border-bottom: none; }
   .compare-table tr.active-row td { background: #eff6ff; }
   .compare-table tr.active-row td:first-child { color: #1d4ed8; }
@@ -1069,7 +1080,7 @@
       <tbody>
         ${rows.map(({ idx, s, r }) => `
           <tr class="${idx === active ? 'active-row' : ''}">
-            <td>${s.name}</td>
+            <td><input class="name-edit" value="${s.name.replace(/"/g,'&quot;')}" title="Click to rename" onchange="renameScenario(${idx}, this.value)" onblur="renameScenario(${idx}, this.value)"></td>
             <td>${s.rs}%</td>
             <td class="${r.svh_net >= 0 ? 'pos' : 'neg'}">${fmt(r.svh_net)}</td>
             <td class="${r.svf_net >= 0 ? 'pos' : 'neg'}">${fmt(r.svf_net)}</td>
@@ -1081,6 +1092,12 @@
         `).join('')}
       </tbody>
     `;
+  }
+
+  // ── Rename from comparison table ─────────────────────────────────────────
+  function renameScenario(idx, name) {
+    scenarios[idx].name = name.trim() || ('Scenario ' + (idx + 1));
+    renderTabs();
   }
 
   // ── Revenue share toggle ──────────────────────────────────────────────────
