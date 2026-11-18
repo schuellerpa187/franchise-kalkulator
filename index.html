@@ -92,23 +92,23 @@
   }
   .tab-close:hover { color: #ef4444; }
   .tab-add {
-    margin-left: 4px;
-    margin-bottom: 2px;
-    width: 26px;
-    height: 26px;
-    border: 1.5px solid #e5e7eb;
-    border-radius: 50%;
+    margin-left: 8px;
+    margin-bottom: 4px;
+    padding: 0.35rem 0.75rem;
+    border: 1.5px solid #d1d5db;
+    border-radius: 7px;
     background: white;
-    color: #6b7280;
-    font-size: 1rem;
-    line-height: 1;
+    color: #374151;
+    font-size: 0.82rem;
+    font-weight: 600;
     cursor: pointer;
     display: flex;
     align-items: center;
-    justify-content: center;
+    gap: 4px;
     transition: all 0.15s;
+    white-space: nowrap;
   }
-  .tab-add:hover { border-color: #2563eb; color: #2563eb; }
+  .tab-add:hover { border-color: #2563eb; color: #2563eb; background: #eff6ff; }
 
   /* Input section */
   .inputs-grid {
@@ -387,7 +387,7 @@
   <!-- TAB BAR -->
   <div class="tab-bar" id="tab-bar">
     <!-- rendered by JS -->
-    <button class="tab-add" onclick="addScenario()" title="Add scenario">+</button>
+    <button class="tab-add" onclick="addScenario()">＋ New scenario</button>
   </div>
 
   <!-- INPUTS -->
