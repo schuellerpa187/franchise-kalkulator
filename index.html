@@ -88,6 +88,7 @@
   body.presentation .model-summary { grid-template-columns: 1fr 1fr !important; }
   body.presentation .summary-strip { grid-template-columns: 1fr 1fr !important; }
   body.presentation .compare-table .rc-col { display: none; }
+  body.presentation .pres-hide { display: none; }
 
   .container { max-width: 1100px; margin: 0 auto; padding: 2rem; }
 
@@ -394,7 +395,7 @@
           <input type="number" id="rch" value="24" min="0" oninput="calc()">
           <span class="suffix">Fälle</span>
         </div>
-        <div class="hint">Ruslan-Benchmark: 24 / Monat (6 / Woche)</div>
+        <div class="hint pres-hide">Ruslan-Benchmark: 24 / Monat (6 / Woche)</div>
       </div>
 
       <div class="field">
