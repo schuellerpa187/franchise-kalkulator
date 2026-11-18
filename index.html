@@ -38,16 +38,15 @@
   }
   .tab-btn {
     display: flex;
-    align-items: center;
-    gap: 5px;
-    padding: 0.5rem 1rem 0.55rem;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 2px;
+    padding: 0.45rem 1rem 0.5rem;
     border: 1.5px solid transparent;
     border-bottom: none;
     border-radius: 8px 8px 0 0;
     background: transparent;
     color: #9ca3af;
-    font-size: 0.85rem;
-    font-weight: 500;
     cursor: pointer;
     position: relative;
     bottom: -2px;
@@ -59,7 +58,6 @@
     background: white;
     color: #1e40af;
     border-color: #e5e7eb;
-    font-weight: 600;
   }
   .tab-btn.active::after {
     content: '';
@@ -69,17 +67,30 @@
     height: 2px;
     background: white;
   }
+  .tab-top {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
   .tab-name-input {
     border: none;
     outline: none;
     background: transparent;
-    font: inherit;
+    font-size: 0.85rem;
+    font-weight: 600;
     color: inherit;
     width: 90px;
-    min-width: 50px;
-    cursor: pointer;
+    min-width: 40px;
+    cursor: text;
   }
-  .tab-btn.active .tab-name-input { cursor: text; }
+  .tab-btn:not(.active) .tab-name-input { cursor: pointer; }
+  .tab-kpis {
+    font-size: 0.68rem;
+    font-weight: 500;
+    color: #9ca3af;
+    letter-spacing: 0.01em;
+  }
+  .tab-btn.active .tab-kpis { color: #6b7280; }
   .tab-close {
     font-size: 0.8rem;
     line-height: 1;
@@ -788,10 +799,10 @@
     calc();
   }
 
-  function renameTab(idx, el) {
+  function startRename(idx, el) {
+    if (el.contentEditable === 'true') return;
     el.contentEditable = 'true';
     el.focus();
-    // select all
     const range = document.createRange();
     range.selectNodeContents(el);
     window.getSelection().removeAllRanges();
@@ -805,9 +816,15 @@
     el.onkeydown = e => { if (e.key === 'Enter') { e.preventDefault(); el.blur(); } };
   }
 
+  function kpiLabel(s) {
+    const ef  = s.ef  || 0;
+    const au  = s.au  || 0;
+    const rcf = s.rcf || 0;
+    return `RS ${s.rs}% · ${ef} own cases · ${au.toLocaleString('de-DE')} €/case · ${rcf} RC cases`;
+  }
+
   function renderTabs() {
     const bar = document.getElementById('tab-bar');
-    // remove old tab buttons, keep the + button
     [...bar.querySelectorAll('.tab-btn')].forEach(el => el.remove());
     const addBtn = bar.querySelector('.tab-add');
 
@@ -816,11 +833,17 @@
       btn.className = 'tab-btn' + (i === active ? ' active' : '');
       btn.onclick = () => switchTab(i);
 
+      // top row: name + close
+      const top = document.createElement('div');
+      top.className = 'tab-top';
+
       const nameEl = document.createElement('span');
       nameEl.className = 'tab-name-input';
+      nameEl.contentEditable = 'false';
       nameEl.textContent = s.name;
-      nameEl.ondblclick = e => { e.stopPropagation(); renameTab(i, nameEl); };
-      btn.appendChild(nameEl);
+      nameEl.title = 'Click to rename';
+      nameEl.onclick = e => { e.stopPropagation(); startRename(i, nameEl); };
+      top.appendChild(nameEl);
 
       if (scenarios.length > 1) {
         const closeEl = document.createElement('button');
@@ -828,8 +851,15 @@
         closeEl.textContent = '×';
         closeEl.title = 'Remove scenario';
         closeEl.onclick = e => removeTab(e, i);
-        btn.appendChild(closeEl);
+        top.appendChild(closeEl);
       }
+      btn.appendChild(top);
+
+      // KPI subtitle
+      const kpisEl = document.createElement('div');
+      kpisEl.className = 'tab-kpis';
+      kpisEl.textContent = kpiLabel(s);
+      btn.appendChild(kpisEl);
 
       bar.insertBefore(btn, addBtn);
     });
@@ -998,6 +1028,14 @@
 
     document.getElementById('sum_breakeven').textContent = r.breakeven <= 0 ? 'Immediate' : r.breakeven + ' cases';
     document.getElementById('sum_rc_annual').textContent = fmt(r.rc_delta * 12);
+
+    // Refresh KPI subtitle on active tab live
+    const tabBar = document.getElementById('tab-bar');
+    const tabBtns = tabBar.querySelectorAll('.tab-btn');
+    tabBtns.forEach((btn, i) => {
+      const kpisEl = btn.querySelector('.tab-kpis');
+      if (kpisEl) kpisEl.textContent = kpiLabel(scenarios[i]);
+    });
 
     renderCompare();
   }
