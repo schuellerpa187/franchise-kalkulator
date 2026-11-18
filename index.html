@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="de">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Repaircheck – Franchise Partner Calculator</title>
+<title>Repaircheck – Franchise-Partner-Kalkulator</title>
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -323,13 +323,13 @@
 </head>
 <body>
 
-<div class="pres-banner">Presentation mode — Repaircheck numbers hidden from screen</div>
+<div class="pres-banner">Präsentationsmodus – Repaircheck-Zahlen ausgeblendet</div>
 
 <header>
-  <h1>Repaircheck — Franchise Partner Calculator</h1>
+  <h1>Repaircheck — Franchise-Partner-Kalkulator</h1>
   <div class="header-actions">
-    <button class="pres-btn" id="pres-toggle" onclick="togglePresentation()">👁 Presentation mode</button>
-    <span class="header-badge">Internal use only</span>
+    <button class="pres-btn" id="pres-toggle" onclick="togglePresentation()">👁 Präsentationsmodus</button>
+    <span class="header-badge">Nur für internen Gebrauch</span>
   </div>
 </header>
 
@@ -337,25 +337,25 @@
 
   <!-- TAB BAR -->
   <div class="tab-bar" id="tab-bar">
-    <button class="tab-add" onclick="addScenario()">＋ New scenario</button>
+    <button class="tab-add" onclick="addScenario()">＋ Neues Szenario</button>
   </div>
 
   <!-- INPUTS -->
   <div class="inputs-grid">
 
     <div class="card">
-      <div class="card-title">Assessor (SV)</div>
+      <div class="card-title">Sachverständiger (SV)</div>
 
       <div class="field">
-        <label>Own cases / month (Eigenfälle)</label>
+        <label>Eigenfälle / Monat</label>
         <div class="field-row">
           <input type="number" id="ef" value="10" min="0" oninput="calc()">
-          <span class="suffix">cases</span>
+          <span class="suffix">Fälle</span>
         </div>
       </div>
 
       <div class="field">
-        <label>Avg. revenue per own case</label>
+        <label>Durchschn. Umsatz pro Eigenfall</label>
         <div class="field-row">
           <input type="number" id="au" value="1200" min="0" step="100" oninput="calc()">
           <span class="suffix">€</span>
@@ -363,55 +363,55 @@
       </div>
 
       <div class="field">
-        <label>Monthly operating costs</label>
+        <label>Monatliche Betriebskosten</label>
         <div class="seg-group" style="margin-bottom:0.5rem">
-          <button class="seg-btn active" id="ek-fixed" onclick="setEkMode('fixed')">€ fixed</button>
-          <button class="seg-btn" id="ek-pct" onclick="setEkMode('pct')">% of revenue</button>
+          <button class="seg-btn active" id="ek-fixed" onclick="setEkMode('fixed')">€ fix</button>
+          <button class="seg-btn" id="ek-pct" onclick="setEkMode('pct')">% vom Umsatz</button>
         </div>
         <div class="field-row">
           <input type="number" id="ek" value="1500" min="0" step="100" oninput="calc()">
-          <span class="suffix" id="ek-suffix">€ / mo</span>
+          <span class="suffix" id="ek-suffix">€ / Mon.</span>
         </div>
-        <div class="hint" id="ek-hint">Admin, website, marketing, etc.</div>
+        <div class="hint" id="ek-hint">Administration, Website, Marketing, etc.</div>
       </div>
 
       <div class="field">
-        <label>Backoffice savings (RC takes over)</label>
+        <label>Backoffice-Einsparung (RC übernimmt)</label>
         <div class="field-row">
           <input type="number" id="bo" value="40" min="0" max="100" step="5" oninput="calc()">
-          <span class="suffix">% of costs</span>
+          <span class="suffix">% der Kosten</span>
         </div>
-        <div class="hint">e.g. 40% = RC handles admin, invoicing, marketing</div>
+        <div class="hint">z.B. 40% = RC übernimmt Admin, Rechnungsstellung, Marketing</div>
       </div>
     </div>
 
     <div class="card">
-      <div class="card-title">Today's Setup</div>
+      <div class="card-title">Aktuelle Situation</div>
 
       <div class="field">
-        <label>RC cases/month today (at 150€ each)</label>
+        <label>RC-Fälle/Monat heute (je 150 €)</label>
         <div class="field-row">
           <input type="number" id="rch" value="24" min="0" oninput="calc()">
-          <span class="suffix">cases</span>
+          <span class="suffix">Fälle</span>
         </div>
-        <div class="hint">Ruslan benchmark: 24 / month (6 / week)</div>
+        <div class="hint">Ruslan-Benchmark: 24 / Monat (6 / Woche)</div>
       </div>
 
       <div class="field">
-        <label>RC gross value per case</label>
+        <label>RC-Bruttowert pro Fall</label>
         <div class="field-row">
           <input type="number" id="rcw" value="500" min="0" step="50" oninput="calc()">
           <span class="suffix">€</span>
         </div>
-        <div class="hint">What RC earns from insurance before paying SV</div>
+        <div class="hint">Was RC von der Versicherung erhält, vor SV-Vergütung</div>
       </div>
     </div>
 
     <div class="card">
-      <div class="card-title">Franchise Offer</div>
+      <div class="card-title">Franchise-Angebot</div>
 
       <div class="field">
-        <label>Revenue share on own cases</label>
+        <label>Revenue Share auf Eigenfälle</label>
         <div class="seg-group" id="rs-group">
           <button class="seg-btn" onclick="setRS(10)" id="rs10">10%</button>
           <button class="seg-btn" onclick="setRS(15)" id="rs15">15%</button>
@@ -421,12 +421,12 @@
       </div>
 
       <div class="field">
-        <label>RC cases/month (franchise, at 250€)</label>
+        <label>RC-Fälle/Monat (Franchise, je 250 €)</label>
         <div class="field-row">
           <input type="number" id="rcf" value="24" min="0" oninput="calc()">
-          <span class="suffix">cases</span>
+          <span class="suffix">Fälle</span>
         </div>
-        <div class="hint">What RC commits to delivering</div>
+        <div class="hint">Was RC zusagt zu liefern</div>
       </div>
 
       <div class="ratio-callout">
@@ -443,40 +443,40 @@
     <!-- STANDARD column -->
     <div>
       <div class="col-header standard">
-        Standard model <span class="col-tag">current setup</span>
+        Standard-Modell <span class="col-tag">aktuell</span>
       </div>
       <div class="cards-grid">
 
         <div class="result-card">
           <div class="rc-title">
-            <span class="party">Assessor</span>
+            <span class="party">Sachverständiger</span>
             <span class="badge badge-today">Standard</span>
           </div>
           <div class="flow-section">
-            <div class="flow-label in">Income</div>
+            <div class="flow-label in">Einnahmen</div>
             <div class="flow-item">
-              <span class="flow-name">Own cases</span>
+              <span class="flow-name">Eigenfälle</span>
               <div class="flow-bar-track"><div class="flow-bar bar-in1" id="b_svh1"></div></div>
               <span class="flow-amount green" id="a_svh1">—</span>
             </div>
             <div class="flow-item">
-              <span class="flow-name">RC cases (150€)</span>
+              <span class="flow-name">RC-Fälle (150 €)</span>
               <div class="flow-bar-track"><div class="flow-bar bar-in2" id="b_svh2"></div></div>
               <span class="flow-amount green" id="a_svh2">—</span>
             </div>
-            <div class="flow-subtotal"><span>Total in</span><span id="svh_in">—</span></div>
+            <div class="flow-subtotal"><span>Gesamt ein</span><span id="svh_in">—</span></div>
           </div>
           <div class="flow-section">
-            <div class="flow-label out">Costs</div>
+            <div class="flow-label out">Kosten</div>
             <div class="flow-item">
-              <span class="flow-name">Operating costs</span>
+              <span class="flow-name">Betriebskosten</span>
               <div class="flow-bar-track"><div class="flow-bar bar-out1" id="b_svh3"></div></div>
               <span class="flow-amount red" id="a_svh3">—</span>
             </div>
-            <div class="flow-subtotal"><span>Total out</span><span id="svh_out">—</span></div>
+            <div class="flow-subtotal"><span>Gesamt aus</span><span id="svh_out">—</span></div>
           </div>
           <div class="net-row">
-            <span class="net-label">Net / month</span>
+            <span class="net-label">Netto / Monat</span>
             <span class="net-amount" id="svh_net">—</span>
           </div>
         </div>
@@ -487,25 +487,25 @@
             <span class="badge badge-today">Standard</span>
           </div>
           <div class="flow-section">
-            <div class="flow-label in">Income</div>
+            <div class="flow-label in">Einnahmen</div>
             <div class="flow-item">
-              <span class="flow-name">Cases (gross)</span>
+              <span class="flow-name">Fälle (brutto)</span>
               <div class="flow-bar-track"><div class="flow-bar bar-rc-in1" id="b_rch1"></div></div>
               <span class="flow-amount green" id="a_rch1">—</span>
             </div>
-            <div class="flow-subtotal"><span>Total in</span><span id="rch_in">—</span></div>
+            <div class="flow-subtotal"><span>Gesamt ein</span><span id="rch_in">—</span></div>
           </div>
           <div class="flow-section">
-            <div class="flow-label out">Costs</div>
+            <div class="flow-label out">Kosten</div>
             <div class="flow-item">
-              <span class="flow-name">SV payout (150€)</span>
+              <span class="flow-name">SV-Vergütung (150 €)</span>
               <div class="flow-bar-track"><div class="flow-bar bar-out1" id="b_rch2"></div></div>
               <span class="flow-amount red" id="a_rch2">—</span>
             </div>
-            <div class="flow-subtotal"><span>Total out</span><span id="rch_out">—</span></div>
+            <div class="flow-subtotal"><span>Gesamt aus</span><span id="rch_out">—</span></div>
           </div>
           <div class="net-row">
-            <span class="net-label">Net / month</span>
+            <span class="net-label">Netto / Monat</span>
             <span class="net-amount" id="rch_net">—</span>
           </div>
         </div>
@@ -513,15 +513,15 @@
       </div>
       <div class="model-summary standard">
         <div class="ms-item">
-          <div class="ms-label">Assessor net</div>
+          <div class="ms-label">SV Netto</div>
           <div class="ms-value" id="ms_svh_net">—</div>
         </div>
         <div class="ms-item rc-only">
-          <div class="ms-label">RC net</div>
+          <div class="ms-label">RC Netto</div>
           <div class="ms-value" id="ms_rch_net">—</div>
         </div>
         <div class="ms-item rc-only">
-          <div class="ms-label" style="color:#374151;font-weight:700">Combined</div>
+          <div class="ms-label" style="color:#374151;font-weight:700">Gesamt</div>
           <div class="ms-value" id="ms_std_combined">—</div>
         </div>
       </div>
@@ -530,45 +530,45 @@
     <!-- FRANCHISE column -->
     <div>
       <div class="col-header franchise">
-        Franchise model <span class="col-tag">proposed</span>
+        Franchise-Modell <span class="col-tag">Angebot</span>
       </div>
       <div class="cards-grid">
 
         <div class="result-card highlight">
           <div class="rc-title">
-            <span class="party">Assessor</span>
+            <span class="party">Sachverständiger</span>
             <span class="badge badge-franchise">Franchise</span>
           </div>
           <div class="flow-section">
-            <div class="flow-label in">Income</div>
+            <div class="flow-label in">Einnahmen</div>
             <div class="flow-item">
-              <span class="flow-name">Own cases</span>
+              <span class="flow-name">Eigenfälle</span>
               <div class="flow-bar-track"><div class="flow-bar bar-in1" id="b_svf1"></div></div>
               <span class="flow-amount green" id="a_svf1">—</span>
             </div>
             <div class="flow-item">
-              <span class="flow-name">RC cases (250€)</span>
+              <span class="flow-name">RC-Fälle (250 €)</span>
               <div class="flow-bar-track"><div class="flow-bar bar-in2" id="b_svf2"></div></div>
               <span class="flow-amount green" id="a_svf2">—</span>
             </div>
-            <div class="flow-subtotal"><span>Total in</span><span id="svf_in">—</span></div>
+            <div class="flow-subtotal"><span>Gesamt ein</span><span id="svf_in">—</span></div>
           </div>
           <div class="flow-section">
-            <div class="flow-label out">Costs</div>
+            <div class="flow-label out">Kosten</div>
             <div class="flow-item">
-              <span class="flow-name">Revenue share</span>
+              <span class="flow-name">Revenue Share</span>
               <div class="flow-bar-track"><div class="flow-bar bar-out1" id="b_svf3"></div></div>
               <span class="flow-amount red" id="a_svf3">—</span>
             </div>
             <div class="flow-item">
-              <span class="flow-name">Operating costs</span>
+              <span class="flow-name">Betriebskosten</span>
               <div class="flow-bar-track"><div class="flow-bar bar-out2" id="b_svf4"></div></div>
               <span class="flow-amount red" id="a_svf4">—</span>
             </div>
-            <div class="flow-subtotal"><span>Total out</span><span id="svf_out">—</span></div>
+            <div class="flow-subtotal"><span>Gesamt aus</span><span id="svf_out">—</span></div>
           </div>
           <div class="net-row">
-            <span class="net-label">Net / month</span>
+            <span class="net-label">Netto / Monat</span>
             <div style="text-align:right">
               <div class="net-amount" id="svf_net">—</div>
               <div class="net-delta" id="sv_delta">—</div>
@@ -582,30 +582,30 @@
             <span class="badge badge-franchise">Franchise</span>
           </div>
           <div class="flow-section">
-            <div class="flow-label in">Income</div>
+            <div class="flow-label in">Einnahmen</div>
             <div class="flow-item">
-              <span class="flow-name">Revenue share</span>
+              <span class="flow-name">Revenue Share</span>
               <div class="flow-bar-track"><div class="flow-bar bar-rc-in1" id="b_rcf1"></div></div>
               <span class="flow-amount green" id="a_rcf1">—</span>
             </div>
             <div class="flow-item">
-              <span class="flow-name">Cases (gross)</span>
+              <span class="flow-name">Fälle (brutto)</span>
               <div class="flow-bar-track"><div class="flow-bar bar-rc-in2" id="b_rcf2"></div></div>
               <span class="flow-amount green" id="a_rcf2">—</span>
             </div>
-            <div class="flow-subtotal"><span>Total in</span><span id="rcf_in">—</span></div>
+            <div class="flow-subtotal"><span>Gesamt ein</span><span id="rcf_in">—</span></div>
           </div>
           <div class="flow-section">
-            <div class="flow-label out">Costs</div>
+            <div class="flow-label out">Kosten</div>
             <div class="flow-item">
-              <span class="flow-name">SV payout (250€)</span>
+              <span class="flow-name">SV-Vergütung (250 €)</span>
               <div class="flow-bar-track"><div class="flow-bar bar-out1" id="b_rcf3"></div></div>
               <span class="flow-amount red" id="a_rcf3">—</span>
             </div>
-            <div class="flow-subtotal"><span>Total out</span><span id="rcf_out">—</span></div>
+            <div class="flow-subtotal"><span>Gesamt aus</span><span id="rcf_out">—</span></div>
           </div>
           <div class="net-row">
-            <span class="net-label">Net / month</span>
+            <span class="net-label">Netto / Monat</span>
             <div style="text-align:right">
               <div class="net-amount" id="rcf_net">—</div>
               <div class="net-delta" id="rc_delta">—</div>
@@ -616,17 +616,17 @@
       </div>
       <div class="model-summary franchise">
         <div class="ms-item">
-          <div class="ms-label">Assessor net</div>
+          <div class="ms-label">SV Netto</div>
           <div class="ms-value" id="ms_svf_net">—</div>
           <div class="ms-delta" id="ms_sv_delta">—</div>
         </div>
         <div class="ms-item rc-only">
-          <div class="ms-label">RC net</div>
+          <div class="ms-label">RC Netto</div>
           <div class="ms-value" id="ms_rcf_net">—</div>
           <div class="ms-delta" id="ms_rc_delta">—</div>
         </div>
         <div class="ms-item rc-only">
-          <div class="ms-label" style="color:#1d4ed8;font-weight:700">Combined</div>
+          <div class="ms-label" style="color:#1d4ed8;font-weight:700">Gesamt</div>
           <div class="ms-value" id="ms_frn_combined">—</div>
           <div class="ms-delta" id="ms_comb_delta">—</div>
         </div>
@@ -638,30 +638,30 @@
   <!-- GLOBAL SUMMARY STRIP -->
   <div class="summary summary-strip" style="margin-bottom:1rem">
     <div class="summary-item">
-      <div class="s-label">SV net change</div>
+      <div class="s-label">SV Netto-Veränderung</div>
       <div class="s-value" id="sum_sv_delta">—</div>
-      <div class="s-sub">vs. standard</div>
+      <div class="s-sub">ggü. Standard</div>
     </div>
     <div class="summary-item">
-      <div class="s-label">SV franchise net</div>
+      <div class="s-label">SV Franchise-Netto</div>
       <div class="s-value" id="sum_sv_net">—</div>
-      <div class="s-sub">per month</div>
+      <div class="s-sub">pro Monat</div>
     </div>
     <div class="summary-item rc-only">
-      <div class="s-label">RC net change</div>
+      <div class="s-label">RC Netto-Veränderung</div>
       <div class="s-value" id="sum_rc_delta">—</div>
-      <div class="s-sub">vs. standard</div>
+      <div class="s-sub">ggü. Standard</div>
     </div>
     <div class="summary-item rc-only">
-      <div class="s-label">RC annual upside</div>
+      <div class="s-label">RC Jahres-Upside</div>
       <div class="s-value" id="sum_rc_annual">—</div>
-      <div class="s-sub">per franchise partner</div>
+      <div class="s-sub">pro Franchise-Partner</div>
     </div>
   </div>
 
   <!-- SCENARIO COMPARISON TABLE (shown when 2+ scenarios) -->
   <div class="compare-section" id="compare-section" style="display:none">
-    <div class="compare-title">Scenario comparison</div>
+    <div class="compare-title">Szenarienvergleich</div>
     <table class="compare-table" id="compare-table"></table>
   </div>
 
@@ -669,17 +669,17 @@
 
 <!-- RC PEEK (presentation mode) -->
 <div class="rc-peek">
-  <div class="rc-peek-title">RC — hidden from screen</div>
-  <div class="rc-peek-row"><span class="rc-peek-label">Standard net</span><span class="rc-peek-val" id="peek_rch_net">—</span></div>
-  <div class="rc-peek-row"><span class="rc-peek-label">Franchise net</span><span class="rc-peek-val" id="peek_rcf_net">—</span></div>
+  <div class="rc-peek-title">RC — ausgeblendet</div>
+  <div class="rc-peek-row"><span class="rc-peek-label">Standard Netto</span><span class="rc-peek-val" id="peek_rch_net">—</span></div>
+  <div class="rc-peek-row"><span class="rc-peek-label">Franchise Netto</span><span class="rc-peek-val" id="peek_rcf_net">—</span></div>
   <div class="rc-peek-row"><span class="rc-peek-label">Delta</span><span class="rc-peek-val" id="peek_rc_delta">—</span></div>
-  <div class="rc-peek-row"><span class="rc-peek-label">Annual upside</span><span class="rc-peek-val" id="peek_rc_annual">—</span></div>
+  <div class="rc-peek-row"><span class="rc-peek-label">Jahres-Upside</span><span class="rc-peek-val" id="peek_rc_annual">—</span></div>
 </div>
 
 <script>
   const DEFAULT = { ef:10, au:1200, ek:1500, ek_mode:'fixed', bo:40, rch:24, rcw:500, rcf:24, rs:20 };
 
-  let scenarios = [{ name: 'Scenario 1', ...DEFAULT }];
+  let scenarios = [{ name: 'Szenario 1', ...DEFAULT }];
   let active = 0;
   let presentationMode = false;
 
@@ -705,7 +705,7 @@
     scenarios[active].ek_mode = mode;
     document.getElementById('ek-fixed').classList.toggle('active', mode === 'fixed');
     document.getElementById('ek-pct').classList.toggle('active', mode === 'pct');
-    document.getElementById('ek-suffix').textContent = mode === 'fixed' ? '€ / mo' : '% of revenue';
+    document.getElementById('ek-suffix').textContent = mode === 'fixed' ? '€ / Mon.' : '% vom Umsatz';
     if (mode === 'pct' && +document.getElementById('ek').value > 100) {
       document.getElementById('ek').value = 25;
     }
@@ -717,7 +717,7 @@
     presentationMode = !presentationMode;
     document.body.classList.toggle('presentation', presentationMode);
     document.getElementById('pres-toggle').classList.toggle('active', presentationMode);
-    document.getElementById('pres-toggle').textContent = presentationMode ? '✕ Exit presentation' : '👁 Presentation mode';
+    document.getElementById('pres-toggle').textContent = presentationMode ? '✕ Präsentation beenden' : '👁 Präsentationsmodus';
   }
 
   // ── Scenario state ────────────────────────────────────────────────────────
@@ -746,7 +746,7 @@
     const mode = s.ek_mode || 'fixed';
     document.getElementById('ek-fixed').classList.toggle('active', mode === 'fixed');
     document.getElementById('ek-pct').classList.toggle('active', mode === 'pct');
-    document.getElementById('ek-suffix').textContent = mode === 'fixed' ? '€ / mo' : '% of revenue';
+    document.getElementById('ek-suffix').textContent = mode === 'fixed' ? '€ / Mon.' : '% vom Umsatz';
     [10, 15, 20, 25].forEach(v =>
       document.getElementById('rs' + v).classList.toggle('active', v === s.rs)
     );
@@ -762,7 +762,7 @@
 
   function addScenario() {
     scenarios[active] = { ...scenarios[active], ...readInputs() };
-    scenarios.push({ ...scenarios[active], name: 'Scenario ' + (scenarios.length + 1) });
+    scenarios.push({ ...scenarios[active], name: 'Szenario ' + (scenarios.length + 1) });
     active = scenarios.length - 1;
     renderTabs();
     loadScenario(scenarios[active]);
@@ -789,7 +789,7 @@
     window.getSelection().addRange(range);
     el.onblur = () => {
       el.contentEditable = 'false';
-      scenarios[idx].name = el.textContent.trim() || ('Scenario ' + (idx + 1));
+      scenarios[idx].name = el.textContent.trim() || ('Szenario ' + (idx + 1));
       el.textContent = scenarios[idx].name;
       renderCompare();
     };
@@ -798,8 +798,8 @@
 
   function kpiLabel(s) {
     const ef = s.ef || 0, au = s.au || 0, rcf = s.rcf || 0;
-    const ekStr = s.ek_mode === 'pct' ? `costs ${s.ek}% rev` : `${(s.ek||0).toLocaleString('de-DE')} € costs`;
-    return `RS ${s.rs}% · ${ef} own · ${rcf} RC · ${ekStr}`;
+    const ekStr = s.ek_mode === 'pct' ? `Kosten ${s.ek}% Umsat.` : `${(s.ek||0).toLocaleString('de-DE')} € Kosten`;
+    return `RS ${s.rs}% · ${ef} eigen · ${rcf} RC · ${ekStr}`;
   }
 
   function renderTabs() {
@@ -819,7 +819,7 @@
       nameEl.className = 'tab-name-input';
       nameEl.contentEditable = 'false';
       nameEl.textContent = s.name;
-      nameEl.title = 'Click to rename';
+      nameEl.title = 'Zum Umbenennen klicken';
       nameEl.onclick = e => { e.stopPropagation(); startRename(i, nameEl); };
       top.appendChild(nameEl);
 
@@ -905,9 +905,9 @@
     // operating costs hint
     if (s.ek_mode === 'pct') {
       document.getElementById('ek-hint').textContent =
-        `= ${fmt(r.ek)} at current revenue (${fmt(r.um)})`;
+        `= ${fmt(r.ek)} beim aktuellen Umsatz (${fmt(r.um)})`;
     } else {
-      document.getElementById('ek-hint').textContent = 'Admin, website, marketing, etc.';
+      document.getElementById('ek-hint').textContent = 'Administration, Website, Marketing, etc.';
     }
 
     // ratio callout
@@ -915,14 +915,14 @@
     if (ef > 0 && rcf > 0) {
       const ratio = (rcf / ef).toFixed(1);
       document.getElementById('ratio-big').textContent =
-        `For every 1 case you do → RC delivers ${ratio} more`;
+        `Für jeden deiner Fälle liefert RC dir ${ratio} weitere`;
       document.getElementById('ratio-sub').textContent =
-        `${ef} own cases + ${rcf} from RC = ${ef + rcf} total / month`;
+        `${ef} Eigenfälle + ${rcf} von RC = ${ef + rcf} gesamt / Monat`;
     } else if (ef > 0) {
-      document.getElementById('ratio-big').textContent = 'Set RC cases above to see the ratio';
+      document.getElementById('ratio-big').textContent = 'RC-Fälle eintragen, um die Ratio zu sehen';
       document.getElementById('ratio-sub').textContent = '';
     } else {
-      document.getElementById('ratio-big').textContent = 'Enter your own cases to see the ratio';
+      document.getElementById('ratio-big').textContent = 'Eigenfälle eintragen, um die Ratio zu sehen';
       document.getElementById('ratio-sub').textContent = '';
     }
 
@@ -962,7 +962,7 @@
     svfNetEl.textContent = fmt(r.svf_net);
     svfNetEl.className = 'net-amount ' + (r.svf_net >= 0 ? 'pos' : 'neg');
     const svDeltaEl = document.getElementById('sv_delta');
-    svDeltaEl.textContent = fmtDelta(r.sv_delta) + ' (' + pct(r.sv_dpct) + ') vs. standard';
+    svDeltaEl.textContent = fmtDelta(r.sv_delta) + ' (' + pct(r.sv_dpct) + ') ggü. Standard';
     svDeltaEl.className = 'net-delta ' + (r.sv_delta >= 0 ? 'pos' : 'neg');
 
     // RC franchise
@@ -972,7 +972,7 @@
     rcfNetEl.textContent = fmt(r.rcf_net);
     rcfNetEl.className = 'net-amount ' + (r.rcf_net >= 0 ? 'pos' : 'neg');
     const rcDeltaEl = document.getElementById('rc_delta');
-    rcDeltaEl.textContent = fmtDelta(r.rc_delta) + ' (' + pct(r.rc_dpct) + ') vs. standard';
+    rcDeltaEl.textContent = fmtDelta(r.rc_delta) + ' (' + pct(r.rc_dpct) + ') ggü. Standard';
     rcDeltaEl.className = 'net-delta ' + (r.rc_delta >= 0 ? 'pos' : 'neg');
 
     // Model summaries
@@ -990,17 +990,17 @@
     const mssvf = document.getElementById('ms_svf_net');
     mssvf.textContent = fmt(r.svf_net); mssvf.className = 'ms-value ' + (r.svf_net >= 0 ? 'pos' : 'neg');
     const mssvdEl = document.getElementById('ms_sv_delta');
-    mssvdEl.textContent = fmtDelta(r.sv_delta) + ' vs. standard';
+    mssvdEl.textContent = fmtDelta(r.sv_delta) + ' ggü. Standard';
     mssvdEl.className = 'ms-delta ' + (r.sv_delta >= 0 ? 'pos' : 'neg');
     const msrcf = document.getElementById('ms_rcf_net');
     msrcf.textContent = fmt(r.rcf_net); msrcf.className = 'ms-value ' + (r.rcf_net >= 0 ? 'pos' : 'neg');
     const msrcdEl = document.getElementById('ms_rc_delta');
-    msrcdEl.textContent = fmtDelta(r.rc_delta) + ' vs. standard';
+    msrcdEl.textContent = fmtDelta(r.rc_delta) + ' ggü. Standard';
     msrcdEl.className = 'ms-delta ' + (r.rc_delta >= 0 ? 'pos' : 'neg');
     const msfrn = document.getElementById('ms_frn_combined');
     msfrn.textContent = fmt(frn_combined); msfrn.className = 'ms-value ' + (frn_combined >= 0 ? 'pos' : 'neg');
     const mscombEl = document.getElementById('ms_comb_delta');
-    mscombEl.textContent = fmtDelta(comb_delta) + ' combined';
+    mscombEl.textContent = fmtDelta(comb_delta) + ' gesamt';
     mscombEl.className = 'ms-delta ' + (comb_delta >= 0 ? 'pos' : 'neg');
 
     // Summary strip
@@ -1045,14 +1045,14 @@
 
     table.innerHTML = `
       <thead><tr>
-        <th>Scenario</th>
+        <th>Szenario</th>
         <th>RS %</th>
-        <th>SV standard net</th>
-        <th>SV franchise net</th>
-        <th>SV delta</th>
-        <th class="rc-col">RC standard net</th>
-        <th class="rc-col">RC franchise net</th>
-        <th class="rc-col">RC delta</th>
+        <th>SV Standard Netto</th>
+        <th>SV Franchise Netto</th>
+        <th>SV Delta</th>
+        <th class="rc-col">RC Standard Netto</th>
+        <th class="rc-col">RC Franchise Netto</th>
+        <th class="rc-col">RC Delta</th>
       </tr></thead>
       <tbody>
         ${rows.map(({ idx, s, r }) => `
@@ -1072,7 +1072,7 @@
   }
 
   function renameScenario(idx, name) {
-    scenarios[idx].name = name.trim() || ('Scenario ' + (idx + 1));
+    scenarios[idx].name = name.trim() || ('Szenario ' + (idx + 1));
     renderTabs();
   }
 
