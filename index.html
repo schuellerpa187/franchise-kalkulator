@@ -23,7 +23,71 @@
     justify-content: space-between;
   }
   header h1 { font-size: 1.1rem; font-weight: 600; letter-spacing: -0.01em; }
-  header span { font-size: 0.8rem; opacity: 0.6; }
+  .header-actions { display: flex; align-items: center; gap: 0.75rem; }
+  .header-badge { font-size: 0.8rem; opacity: 0.6; }
+  .pres-btn {
+    padding: 0.4rem 0.9rem;
+    border: 1.5px solid rgba(255,255,255,0.35);
+    border-radius: 7px;
+    background: transparent;
+    color: white;
+    font-size: 0.8rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .pres-btn:hover { background: rgba(255,255,255,0.1); }
+  .pres-btn.active { background: #f59e0b; border-color: #f59e0b; color: #1a1a2e; }
+
+  /* Presentation mode banner */
+  .pres-banner {
+    display: none;
+    background: #f59e0b;
+    color: #1a1a2e;
+    text-align: center;
+    font-size: 0.75rem;
+    font-weight: 700;
+    padding: 0.4rem;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+  }
+  body.presentation .pres-banner { display: block; }
+
+  /* RC peek panel (presentation mode only) */
+  .rc-peek {
+    display: none;
+    position: fixed;
+    bottom: 1.25rem;
+    right: 1.25rem;
+    background: #1e3a8a;
+    color: white;
+    border-radius: 10px;
+    padding: 0.75rem 1rem;
+    min-width: 200px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.25);
+    z-index: 100;
+    font-size: 0.8rem;
+  }
+  body.presentation .rc-peek { display: block; }
+  .rc-peek-title {
+    font-size: 0.65rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    opacity: 0.6;
+    margin-bottom: 0.5rem;
+  }
+  .rc-peek-row { display: flex; justify-content: space-between; gap: 1rem; margin-bottom: 4px; }
+  .rc-peek-row:last-child { margin-bottom: 0; }
+  .rc-peek-label { opacity: 0.7; }
+  .rc-peek-val { font-weight: 700; }
+
+  /* Presentation mode: hide RC elements */
+  body.presentation .rc-only { display: none !important; }
+  body.presentation .cards-grid { grid-template-columns: 1fr !important; }
+  body.presentation .model-summary { grid-template-columns: 1fr 1fr !important; }
+  body.presentation .summary-strip { grid-template-columns: 1fr 1fr !important; }
+  body.presentation .compare-table .rc-col { display: none; }
 
   .container { max-width: 1100px; margin: 0 auto; padding: 2rem; }
 
@@ -34,7 +98,6 @@
     gap: 3px;
     margin-bottom: 1.25rem;
     border-bottom: 2px solid #e5e7eb;
-    padding-bottom: 0;
   }
   .tab-btn {
     display: flex;
@@ -54,209 +117,122 @@
     white-space: nowrap;
   }
   .tab-btn:hover { color: #374151; }
-  .tab-btn.active {
-    background: white;
-    color: #1e40af;
-    border-color: #e5e7eb;
-  }
+  .tab-btn.active { background: white; color: #1e40af; border-color: #e5e7eb; }
   .tab-btn.active::after {
-    content: '';
-    position: absolute;
-    bottom: -2px;
-    left: 0; right: 0;
-    height: 2px;
-    background: white;
+    content: ''; position: absolute; bottom: -2px; left: 0; right: 0;
+    height: 2px; background: white;
   }
-  .tab-top {
-    display: flex;
-    align-items: center;
-    gap: 5px;
-  }
+  .tab-top { display: flex; align-items: center; gap: 5px; }
   .tab-name-input {
-    border: none;
-    outline: none;
-    background: transparent;
-    font-size: 0.85rem;
-    font-weight: 600;
-    color: inherit;
-    width: 90px;
-    min-width: 40px;
-    cursor: text;
+    border: none; outline: none; background: transparent;
+    font-size: 0.85rem; font-weight: 600; color: inherit;
+    width: 90px; min-width: 40px; cursor: text;
   }
   .tab-btn:not(.active) .tab-name-input { cursor: pointer; }
-  .tab-kpis {
-    font-size: 0.68rem;
-    font-weight: 500;
-    color: #9ca3af;
-    letter-spacing: 0.01em;
-  }
+  .tab-kpis { font-size: 0.68rem; font-weight: 500; color: #9ca3af; letter-spacing: 0.01em; }
   .tab-btn.active .tab-kpis { color: #6b7280; }
   .tab-close {
-    font-size: 0.8rem;
-    line-height: 1;
-    color: #9ca3af;
-    border: none;
-    background: none;
-    cursor: pointer;
-    padding: 0 0 0 2px;
-    transition: color 0.1s;
+    font-size: 0.8rem; line-height: 1; color: #9ca3af;
+    border: none; background: none; cursor: pointer; padding: 0 0 0 2px;
   }
   .tab-close:hover { color: #ef4444; }
   .tab-add {
-    margin-left: 8px;
-    margin-bottom: 4px;
+    margin-left: 8px; margin-bottom: 4px;
     padding: 0.35rem 0.75rem;
-    border: 1.5px solid #d1d5db;
-    border-radius: 7px;
-    background: white;
-    color: #374151;
-    font-size: 0.82rem;
-    font-weight: 600;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    gap: 4px;
-    transition: all 0.15s;
-    white-space: nowrap;
+    border: 1.5px solid #d1d5db; border-radius: 7px;
+    background: white; color: #374151;
+    font-size: 0.82rem; font-weight: 600;
+    cursor: pointer; display: flex; align-items: center; gap: 4px;
+    white-space: nowrap; transition: all 0.15s;
   }
   .tab-add:hover { border-color: #2563eb; color: #2563eb; background: #eff6ff; }
 
-  /* Input section */
+  /* Inputs */
   .inputs-grid {
     display: grid;
     grid-template-columns: 1fr 1fr 1fr;
     gap: 1rem;
     margin-bottom: 1.5rem;
   }
-
   .card {
-    background: white;
-    border-radius: 10px;
+    background: white; border-radius: 10px;
     padding: 1.25rem 1.5rem;
     box-shadow: 0 1px 3px rgba(0,0,0,0.08);
   }
-
   .card-title {
-    font-size: 0.7rem;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.06em;
-    color: #6b7280;
-    margin-bottom: 1.1rem;
+    font-size: 0.7rem; font-weight: 600;
+    text-transform: uppercase; letter-spacing: 0.06em;
+    color: #6b7280; margin-bottom: 1.1rem;
   }
-
   .field { margin-bottom: 1rem; }
   .field:last-child { margin-bottom: 0; }
-
-  .field label {
-    display: block;
-    font-size: 0.8rem;
-    color: #6b7280;
-    margin-bottom: 0.35rem;
-  }
-
-  .field-row {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-  }
-
+  .field label { display: block; font-size: 0.8rem; color: #6b7280; margin-bottom: 0.35rem; }
+  .field-row { display: flex; align-items: center; gap: 0.5rem; }
   input[type="number"] {
-    width: 100%;
-    padding: 0.5rem 0.75rem;
-    border: 1.5px solid #e5e7eb;
-    border-radius: 7px;
-    font-size: 0.95rem;
-    font-weight: 500;
-    color: #1a1a2e;
-    outline: none;
-    transition: border-color 0.15s;
+    width: 100%; padding: 0.5rem 0.75rem;
+    border: 1.5px solid #e5e7eb; border-radius: 7px;
+    font-size: 0.95rem; font-weight: 500; color: #1a1a2e;
+    outline: none; transition: border-color 0.15s;
   }
   input[type="number"]:focus { border-color: #2563eb; }
-
-  .suffix {
-    font-size: 0.85rem;
-    color: #9ca3af;
-    white-space: nowrap;
-  }
-
+  .suffix { font-size: 0.85rem; color: #9ca3af; white-space: nowrap; }
   .seg-group { display: flex; gap: 4px; }
   .seg-btn {
-    flex: 1;
-    padding: 0.45rem 0;
-    border: 1.5px solid #e5e7eb;
-    border-radius: 7px;
-    background: white;
-    font-size: 0.85rem;
-    font-weight: 500;
-    color: #6b7280;
-    cursor: pointer;
-    transition: all 0.15s;
+    flex: 1; padding: 0.45rem 0;
+    border: 1.5px solid #e5e7eb; border-radius: 7px;
+    background: white; font-size: 0.85rem; font-weight: 500;
+    color: #6b7280; cursor: pointer; transition: all 0.15s;
   }
   .seg-btn:hover { border-color: #93c5fd; color: #1e40af; }
   .seg-btn.active { background: #2563eb; border-color: #2563eb; color: white; }
-
   .hint { font-size: 0.72rem; color: #9ca3af; margin-top: 0.3rem; }
+
+  /* Ratio callout */
+  .ratio-callout {
+    margin-top: 1rem;
+    padding: 0.75rem 1rem;
+    background: linear-gradient(135deg, #eff6ff, #dbeafe);
+    border: 1px solid #bfdbfe;
+    border-radius: 8px;
+    font-size: 0.8rem;
+    color: #1e40af;
+  }
+  .ratio-callout .ratio-big {
+    font-size: 1.3rem; font-weight: 700; color: #1d4ed8;
+    display: block; line-height: 1.2;
+  }
+  .ratio-callout .ratio-sub { font-size: 0.72rem; color: #3b82f6; margin-top: 2px; }
 
   /* Result cards */
   .col-header {
-    font-size: 0.95rem;
-    font-weight: 700;
-    letter-spacing: -0.01em;
+    font-size: 0.95rem; font-weight: 700; letter-spacing: -0.01em;
     padding: 0.5rem 1rem 0.5rem 1.25rem;
-    border-radius: 8px 8px 0 0;
-    margin-bottom: 0.75rem;
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
+    border-radius: 8px 8px 0 0; margin-bottom: 0.75rem;
+    display: flex; align-items: center; gap: 0.5rem;
   }
   .col-header.standard { background: #f3f4f6; color: #374151; border-left: 4px solid #9ca3af; }
   .col-header.franchise { background: #dbeafe; color: #1d4ed8; border-left: 4px solid #2563eb; }
   .col-header .col-tag {
-    font-size: 0.65rem;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.06em;
-    opacity: 0.6;
+    font-size: 0.65rem; font-weight: 600;
+    text-transform: uppercase; letter-spacing: 0.06em; opacity: 0.6;
   }
-
+  .cards-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; }
   .result-card {
-    background: white;
-    border-radius: 10px;
+    background: white; border-radius: 10px;
     padding: 1.25rem 1.5rem;
     box-shadow: 0 1px 3px rgba(0,0,0,0.08);
   }
   .result-card.highlight { border: 2px solid #2563eb; }
-
-  .rc-title {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 1rem;
-  }
+  .rc-title { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; }
   .rc-title .party { font-size: 0.85rem; font-weight: 600; color: #374151; }
-  .badge {
-    font-size: 0.65rem;
-    font-weight: 600;
-    padding: 2px 8px;
-    border-radius: 4px;
-    text-transform: uppercase;
-    letter-spacing: 0.04em;
-  }
+  .badge { font-size: 0.65rem; font-weight: 600; padding: 2px 8px; border-radius: 4px; text-transform: uppercase; letter-spacing: 0.04em; }
   .badge-today { background: #f3f4f6; color: #6b7280; }
   .badge-franchise { background: #dbeafe; color: #1d4ed8; }
 
   .flow-section { margin-bottom: 0.875rem; }
-  .flow-label {
-    font-size: 0.65rem;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    margin-bottom: 0.5rem;
-  }
+  .flow-label { font-size: 0.65rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.5rem; }
   .flow-label.in { color: #059669; }
   .flow-label.out { color: #dc2626; }
-
   .flow-item { display: flex; align-items: center; gap: 6px; margin-bottom: 5px; }
   .flow-name { font-size: 0.75rem; color: #6b7280; flex: 0 0 105px; }
   .flow-bar-track { flex: 1; height: 6px; background: #f3f4f6; border-radius: 3px; overflow: hidden; }
@@ -267,28 +243,17 @@
   .bar-out2 { background: #fca5a5; }
   .bar-rc-in1 { background: #3b82f6; }
   .bar-rc-in2 { background: #93c5fd; }
-
   .flow-amount { font-size: 0.75rem; font-weight: 600; min-width: 60px; text-align: right; }
   .flow-amount.red { color: #dc2626; }
   .flow-amount.green { color: #059669; }
-
   .flow-subtotal {
-    display: flex;
-    justify-content: space-between;
-    font-size: 0.75rem;
-    color: #9ca3af;
-    padding-top: 4px;
-    border-top: 1px solid #f3f4f6;
-    margin-top: 2px;
+    display: flex; justify-content: space-between;
+    font-size: 0.75rem; color: #9ca3af;
+    padding-top: 4px; border-top: 1px solid #f3f4f6; margin-top: 2px;
   }
-
   .net-row {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-end;
-    padding-top: 10px;
-    border-top: 2px solid #f3f4f6;
-    margin-top: 8px;
+    display: flex; justify-content: space-between; align-items: flex-end;
+    padding-top: 10px; border-top: 2px solid #f3f4f6; margin-top: 8px;
   }
   .net-label { font-size: 0.8rem; font-weight: 600; color: #374151; }
   .net-amount { font-size: 1.5rem; font-weight: 700; line-height: 1; }
@@ -296,96 +261,55 @@
 
   .pos { color: #059669; }
   .neg { color: #dc2626; }
-  .warn { color: #d97706; }
 
-  /* Model summary rows */
+  /* Model summary */
   .model-summary {
-    border-radius: 8px;
-    padding: 0.9rem 1.25rem;
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
-    gap: 0.5rem;
-    margin-top: 0.75rem;
+    border-radius: 8px; padding: 0.9rem 1.25rem;
+    display: grid; grid-template-columns: 1fr 1fr 1fr;
+    gap: 0.5rem; margin-top: 0.75rem;
   }
   .model-summary.standard { background: #f3f4f6; border: 1px solid #e5e7eb; }
   .model-summary.franchise { background: #eff6ff; border: 1px solid #bfdbfe; }
-  .ms-label {
-    font-size: 0.65rem;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    color: #9ca3af;
-    margin-bottom: 3px;
-  }
+  .ms-label { font-size: 0.65rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; color: #9ca3af; margin-bottom: 3px; }
   .ms-value { font-size: 1.1rem; font-weight: 700; line-height: 1; }
   .ms-delta { font-size: 0.7rem; font-weight: 600; margin-top: 2px; }
 
   /* Summary strip */
   .summary {
-    background: #1e3a8a;
-    border-radius: 10px;
+    background: #1e3a8a; border-radius: 10px;
     padding: 1.25rem 1.75rem;
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 1rem;
-    color: white;
+    display: grid; gap: 1rem; color: white;
   }
+  .summary-strip { grid-template-columns: repeat(4, 1fr); }
   .summary-item .s-label { font-size: 0.7rem; opacity: 0.6; margin-bottom: 4px; }
   .summary-item .s-value { font-size: 1.3rem; font-weight: 700; }
   .summary-item .s-sub { font-size: 0.72rem; opacity: 0.6; margin-top: 2px; }
 
   /* Scenario comparison table */
-  .compare-section {
-    margin-top: 1.5rem;
-  }
-  .compare-title {
-    font-size: 0.7rem;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.06em;
-    color: #9ca3af;
-    margin-bottom: 0.75rem;
-  }
+  .compare-section { margin-top: 1.5rem; }
+  .compare-title { font-size: 0.7rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; color: #9ca3af; margin-bottom: 0.75rem; }
   .compare-table {
-    width: 100%;
-    border-collapse: separate;
-    border-spacing: 0;
-    background: white;
-    border-radius: 10px;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.08);
-    overflow: hidden;
+    width: 100%; border-collapse: separate; border-spacing: 0;
+    background: white; border-radius: 10px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.08); overflow: hidden;
   }
   .compare-table th {
-    font-size: 0.7rem;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    color: #6b7280;
-    padding: 0.6rem 1rem;
-    background: #f9fafb;
-    text-align: right;
-    border-bottom: 1px solid #e5e7eb;
+    font-size: 0.7rem; font-weight: 600; text-transform: uppercase;
+    letter-spacing: 0.05em; color: #6b7280;
+    padding: 0.6rem 1rem; background: #f9fafb;
+    text-align: right; border-bottom: 1px solid #e5e7eb;
   }
   .compare-table th:first-child { text-align: left; }
   .compare-table td {
-    font-size: 0.85rem;
-    padding: 0.65rem 1rem;
-    text-align: right;
-    border-bottom: 1px solid #f3f4f6;
-    font-weight: 500;
+    font-size: 0.85rem; padding: 0.65rem 1rem;
+    text-align: right; border-bottom: 1px solid #f3f4f6; font-weight: 500;
   }
-  .compare-table td:first-child { text-align: left; font-weight: 600; color: #374151; cursor: text; }
-  .compare-table td:first-child:hover { color: #1d4ed8; }
+  .compare-table td:first-child { text-align: left; font-weight: 600; color: #374151; }
   .compare-table .name-edit {
-    border: none;
-    outline: none;
-    background: transparent;
-    font: inherit;
-    color: inherit;
-    width: 100%;
-    min-width: 80px;
-    cursor: text;
+    border: none; outline: none; background: transparent;
+    font: inherit; color: inherit; width: 100%; min-width: 80px; cursor: text;
   }
+  .compare-table .name-edit:hover { color: #1d4ed8; }
   .compare-table tr:last-child td { border-bottom: none; }
   .compare-table tr.active-row td { background: #eff6ff; }
   .compare-table tr.active-row td:first-child { color: #1d4ed8; }
@@ -399,16 +323,20 @@
 </head>
 <body>
 
+<div class="pres-banner">Presentation mode — Repaircheck numbers hidden from screen</div>
+
 <header>
   <h1>Repaircheck — Franchise Partner Calculator</h1>
-  <span>Internal use only</span>
+  <div class="header-actions">
+    <button class="pres-btn" id="pres-toggle" onclick="togglePresentation()">👁 Presentation mode</button>
+    <span class="header-badge">Internal use only</span>
+  </div>
 </header>
 
 <div class="container">
 
   <!-- TAB BAR -->
   <div class="tab-bar" id="tab-bar">
-    <!-- rendered by JS -->
     <button class="tab-add" onclick="addScenario()">＋ New scenario</button>
   </div>
 
@@ -436,11 +364,15 @@
 
       <div class="field">
         <label>Monthly operating costs</label>
+        <div class="seg-group" style="margin-bottom:0.5rem">
+          <button class="seg-btn active" id="ek-fixed" onclick="setEkMode('fixed')">€ fixed</button>
+          <button class="seg-btn" id="ek-pct" onclick="setEkMode('pct')">% of revenue</button>
+        </div>
         <div class="field-row">
           <input type="number" id="ek" value="1500" min="0" step="100" oninput="calc()">
-          <span class="suffix">€ / mo</span>
+          <span class="suffix" id="ek-suffix">€ / mo</span>
         </div>
-        <div class="hint">Admin, website, marketing, etc.</div>
+        <div class="hint" id="ek-hint">Admin, website, marketing, etc.</div>
       </div>
 
       <div class="field">
@@ -496,6 +428,11 @@
         </div>
         <div class="hint">What RC commits to delivering</div>
       </div>
+
+      <div class="ratio-callout">
+        <span class="ratio-big" id="ratio-big">—</span>
+        <span class="ratio-sub" id="ratio-sub">—</span>
+      </div>
     </div>
 
   </div>
@@ -506,10 +443,9 @@
     <!-- STANDARD column -->
     <div>
       <div class="col-header standard">
-        Standard model
-        <span class="col-tag">current setup</span>
+        Standard model <span class="col-tag">current setup</span>
       </div>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.75rem">
+      <div class="cards-grid">
 
         <div class="result-card">
           <div class="rc-title">
@@ -545,7 +481,7 @@
           </div>
         </div>
 
-        <div class="result-card">
+        <div class="result-card rc-only">
           <div class="rc-title">
             <span class="party">Repaircheck</span>
             <span class="badge badge-today">Standard</span>
@@ -580,11 +516,11 @@
           <div class="ms-label">Assessor net</div>
           <div class="ms-value" id="ms_svh_net">—</div>
         </div>
-        <div class="ms-item">
+        <div class="ms-item rc-only">
           <div class="ms-label">RC net</div>
           <div class="ms-value" id="ms_rch_net">—</div>
         </div>
-        <div class="ms-item">
+        <div class="ms-item rc-only">
           <div class="ms-label" style="color:#374151;font-weight:700">Combined</div>
           <div class="ms-value" id="ms_std_combined">—</div>
         </div>
@@ -594,10 +530,9 @@
     <!-- FRANCHISE column -->
     <div>
       <div class="col-header franchise">
-        Franchise model
-        <span class="col-tag">proposed</span>
+        Franchise model <span class="col-tag">proposed</span>
       </div>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.75rem">
+      <div class="cards-grid">
 
         <div class="result-card highlight">
           <div class="rc-title">
@@ -641,7 +576,7 @@
           </div>
         </div>
 
-        <div class="result-card highlight">
+        <div class="result-card highlight rc-only">
           <div class="rc-title">
             <span class="party">Repaircheck</span>
             <span class="badge badge-franchise">Franchise</span>
@@ -685,12 +620,12 @@
           <div class="ms-value" id="ms_svf_net">—</div>
           <div class="ms-delta" id="ms_sv_delta">—</div>
         </div>
-        <div class="ms-item">
+        <div class="ms-item rc-only">
           <div class="ms-label">RC net</div>
           <div class="ms-value" id="ms_rcf_net">—</div>
           <div class="ms-delta" id="ms_rc_delta">—</div>
         </div>
-        <div class="ms-item">
+        <div class="ms-item rc-only">
           <div class="ms-label" style="color:#1d4ed8;font-weight:700">Combined</div>
           <div class="ms-value" id="ms_frn_combined">—</div>
           <div class="ms-delta" id="ms_comb_delta">—</div>
@@ -701,23 +636,23 @@
   </div>
 
   <!-- GLOBAL SUMMARY STRIP -->
-  <div class="summary" style="margin-bottom:1rem">
+  <div class="summary summary-strip" style="margin-bottom:1rem">
     <div class="summary-item">
       <div class="s-label">SV net change</div>
       <div class="s-value" id="sum_sv_delta">—</div>
       <div class="s-sub">vs. standard</div>
     </div>
     <div class="summary-item">
+      <div class="s-label">SV franchise net</div>
+      <div class="s-value" id="sum_sv_net">—</div>
+      <div class="s-sub">per month</div>
+    </div>
+    <div class="summary-item rc-only">
       <div class="s-label">RC net change</div>
       <div class="s-value" id="sum_rc_delta">—</div>
       <div class="s-sub">vs. standard</div>
     </div>
-    <div class="summary-item">
-      <div class="s-label">Breakeven RC cases</div>
-      <div class="s-value" id="sum_breakeven">—</div>
-      <div class="s-sub">to cover revenue share</div>
-    </div>
-    <div class="summary-item">
+    <div class="summary-item rc-only">
       <div class="s-label">RC annual upside</div>
       <div class="s-value" id="sum_rc_annual">—</div>
       <div class="s-sub">per franchise partner</div>
@@ -732,11 +667,21 @@
 
 </div>
 
+<!-- RC PEEK (presentation mode) -->
+<div class="rc-peek">
+  <div class="rc-peek-title">RC — hidden from screen</div>
+  <div class="rc-peek-row"><span class="rc-peek-label">Standard net</span><span class="rc-peek-val" id="peek_rch_net">—</span></div>
+  <div class="rc-peek-row"><span class="rc-peek-label">Franchise net</span><span class="rc-peek-val" id="peek_rcf_net">—</span></div>
+  <div class="rc-peek-row"><span class="rc-peek-label">Delta</span><span class="rc-peek-val" id="peek_rc_delta">—</span></div>
+  <div class="rc-peek-row"><span class="rc-peek-label">Annual upside</span><span class="rc-peek-val" id="peek_rc_annual">—</span></div>
+</div>
+
 <script>
-  const DEFAULT = { ef:10, au:1200, ek:1500, bo:40, rch:24, rcw:500, rcf:24, rs:20 };
+  const DEFAULT = { ef:10, au:1200, ek:1500, ek_mode:'fixed', bo:40, rch:24, rcw:500, rcf:24, rs:20 };
 
   let scenarios = [{ name: 'Scenario 1', ...DEFAULT }];
   let active = 0;
+  let presentationMode = false;
 
   // ── Helpers ──────────────────────────────────────────────────────────────
   const fmt = n => {
@@ -755,17 +700,38 @@
     if (el) el.textContent = text;
   }
 
+  // ── Operating costs mode ─────────────────────────────────────────────────
+  function setEkMode(mode) {
+    scenarios[active].ek_mode = mode;
+    document.getElementById('ek-fixed').classList.toggle('active', mode === 'fixed');
+    document.getElementById('ek-pct').classList.toggle('active', mode === 'pct');
+    document.getElementById('ek-suffix').textContent = mode === 'fixed' ? '€ / mo' : '% of revenue';
+    if (mode === 'pct' && +document.getElementById('ek').value > 100) {
+      document.getElementById('ek').value = 25;
+    }
+    calc();
+  }
+
+  // ── Presentation mode ─────────────────────────────────────────────────────
+  function togglePresentation() {
+    presentationMode = !presentationMode;
+    document.body.classList.toggle('presentation', presentationMode);
+    document.getElementById('pres-toggle').classList.toggle('active', presentationMode);
+    document.getElementById('pres-toggle').textContent = presentationMode ? '✕ Exit presentation' : '👁 Presentation mode';
+  }
+
   // ── Scenario state ────────────────────────────────────────────────────────
   function readInputs() {
     return {
-      ef:  Math.max(0, +document.getElementById('ef').value  || 0),
-      au:  Math.max(0, +document.getElementById('au').value  || 0),
-      ek:  Math.max(0, +document.getElementById('ek').value  || 0),
-      bo:  Math.min(100, Math.max(0, +document.getElementById('bo').value || 0)),
-      rch: Math.max(0, +document.getElementById('rch').value || 0),
-      rcw: Math.max(0, +document.getElementById('rcw').value || 0),
-      rcf: Math.max(0, +document.getElementById('rcf').value || 0),
-      rs:  scenarios[active].rs,
+      ef:       Math.max(0, +document.getElementById('ef').value  || 0),
+      au:       Math.max(0, +document.getElementById('au').value  || 0),
+      ek:       Math.max(0, +document.getElementById('ek').value  || 0),
+      ek_mode:  scenarios[active].ek_mode || 'fixed',
+      bo:       Math.min(100, Math.max(0, +document.getElementById('bo').value || 0)),
+      rch:      Math.max(0, +document.getElementById('rch').value || 0),
+      rcw:      Math.max(0, +document.getElementById('rcw').value || 0),
+      rcf:      Math.max(0, +document.getElementById('rcf').value || 0),
+      rs:       scenarios[active].rs,
     };
   }
 
@@ -777,6 +743,10 @@
     document.getElementById('rch').value = s.rch;
     document.getElementById('rcw').value = s.rcw;
     document.getElementById('rcf').value = s.rcf;
+    const mode = s.ek_mode || 'fixed';
+    document.getElementById('ek-fixed').classList.toggle('active', mode === 'fixed');
+    document.getElementById('ek-pct').classList.toggle('active', mode === 'pct');
+    document.getElementById('ek-suffix').textContent = mode === 'fixed' ? '€ / mo' : '% of revenue';
     [10, 15, 20, 25].forEach(v =>
       document.getElementById('rs' + v).classList.toggle('active', v === s.rs)
     );
@@ -792,8 +762,7 @@
 
   function addScenario() {
     scenarios[active] = { ...scenarios[active], ...readInputs() };
-    const newS = { ...scenarios[active], name: 'Scenario ' + (scenarios.length + 1) };
-    scenarios.push(newS);
+    scenarios.push({ ...scenarios[active], name: 'Scenario ' + (scenarios.length + 1) });
     active = scenarios.length - 1;
     renderTabs();
     loadScenario(scenarios[active]);
@@ -828,23 +797,21 @@
   }
 
   function kpiLabel(s) {
-    const ef  = s.ef  || 0;
-    const au  = s.au  || 0;
-    const rcf = s.rcf || 0;
-    return `RS ${s.rs}% · ${ef} own cases · ${au.toLocaleString('de-DE')} €/case · ${rcf} RC cases`;
+    const ef = s.ef || 0, au = s.au || 0, rcf = s.rcf || 0;
+    const ekStr = s.ek_mode === 'pct' ? `costs ${s.ek}% rev` : `${(s.ek||0).toLocaleString('de-DE')} € costs`;
+    return `RS ${s.rs}% · ${ef} own · ${rcf} RC · ${ekStr}`;
   }
 
   function renderTabs() {
-    const bar = document.getElementById('tab-bar');
-    [...bar.querySelectorAll('.tab-btn')].forEach(el => el.remove());
-    const addBtn = bar.querySelector('.tab-add');
+    const tabBar = document.getElementById('tab-bar');
+    [...tabBar.querySelectorAll('.tab-btn')].forEach(el => el.remove());
+    const addBtn = tabBar.querySelector('.tab-add');
 
     scenarios.forEach((s, i) => {
       const btn = document.createElement('div');
       btn.className = 'tab-btn' + (i === active ? ' active' : '');
       btn.onclick = () => switchTab(i);
 
-      // top row: name + close
       const top = document.createElement('div');
       top.className = 'tab-top';
 
@@ -860,33 +827,33 @@
         const closeEl = document.createElement('button');
         closeEl.className = 'tab-close';
         closeEl.textContent = '×';
-        closeEl.title = 'Remove scenario';
         closeEl.onclick = e => removeTab(e, i);
         top.appendChild(closeEl);
       }
       btn.appendChild(top);
 
-      // KPI subtitle
       const kpisEl = document.createElement('div');
       kpisEl.className = 'tab-kpis';
       kpisEl.textContent = kpiLabel(s);
       btn.appendChild(kpisEl);
 
-      bar.insertBefore(btn, addBtn);
+      tabBar.insertBefore(btn, addBtn);
     });
   }
 
-  // ── Pure compute (no DOM side-effects) ────────────────────────────────────
+  // ── Pure compute ──────────────────────────────────────────────────────────
   function computeScenario(s) {
     const ef  = Math.max(0, s.ef);
     const au  = Math.max(0, s.au);
-    const ek  = Math.max(0, s.ek);
+    const um  = ef * au;
+    const ek  = s.ek_mode === 'pct'
+      ? um * Math.min(100, Math.max(0, s.ek)) / 100
+      : Math.max(0, s.ek);
     const bo  = ek * Math.min(100, Math.max(0, s.bo)) / 100;
     const rch = Math.max(0, s.rch);
     const rcw = Math.max(0, s.rcw);
     const rcf = Math.max(0, s.rcf);
 
-    const um    = ef * au;
     const rsAmt = um * s.rs / 100;
     const ekF   = Math.max(0, ek - bo);
 
@@ -915,12 +882,11 @@
     const sv_dpct  = svh_net !== 0 ? sv_delta / Math.abs(svh_net) * 100 : 0;
     const rc_dpct  = rch_net !== 0 ? rc_delta / Math.abs(rch_net) * 100 : 0;
     const breakeven = rsAmt > bo ? Math.ceil((rsAmt - bo) / 250) : 0;
-
     const sv_scale = Math.max(svh_in, svf_in, 1);
     const rc_scale = Math.max(rch_in, rcf_in, 1);
 
     return {
-      um, rsAmt, ekF, bo,
+      ek, um, rsAmt, ekF, bo,
       svh_in1, svh_in2, svh_in, svh_out, svh_net,
       svf_in1, svf_in2, svf_in, svf_out1, svf_out2, svf_out, svf_net,
       rch_in, rch_out, rch_net,
@@ -930,11 +896,35 @@
     };
   }
 
-  // ── Render active scenario to DOM ─────────────────────────────────────────
+  // ── Render ────────────────────────────────────────────────────────────────
   function calc() {
-    // save current inputs to active scenario
     scenarios[active] = { ...scenarios[active], ...readInputs() };
-    const r = computeScenario(scenarios[active]);
+    const s = scenarios[active];
+    const r = computeScenario(s);
+
+    // operating costs hint
+    if (s.ek_mode === 'pct') {
+      document.getElementById('ek-hint').textContent =
+        `= ${fmt(r.ek)} at current revenue (${fmt(r.um)})`;
+    } else {
+      document.getElementById('ek-hint').textContent = 'Admin, website, marketing, etc.';
+    }
+
+    // ratio callout
+    const ef = Math.max(0, s.ef), rcf = Math.max(0, s.rcf);
+    if (ef > 0 && rcf > 0) {
+      const ratio = (rcf / ef).toFixed(1);
+      document.getElementById('ratio-big').textContent =
+        `For every 1 case you do → RC delivers ${ratio} more`;
+      document.getElementById('ratio-sub').textContent =
+        `${ef} own cases + ${rcf} from RC = ${ef + rcf} total / month`;
+    } else if (ef > 0) {
+      document.getElementById('ratio-big').textContent = 'Set RC cases above to see the ratio';
+      document.getElementById('ratio-sub').textContent = '';
+    } else {
+      document.getElementById('ratio-big').textContent = 'Enter your own cases to see the ratio';
+      document.getElementById('ratio-sub').textContent = '';
+    }
 
     // bars
     document.getElementById('b_svh1').style.width = bar(r.svh_in1, r.sv_scale);
@@ -951,8 +941,7 @@
     document.getElementById('b_rcf3').style.width = bar(r.rcf_out, r.rc_scale);
 
     // SV standard
-    setEl('a_svh1', fmt(r.svh_in1)); setEl('a_svh2', fmt(r.svh_in2));
-    setEl('a_svh3', fmt(r.svh_out));
+    setEl('a_svh1', fmt(r.svh_in1)); setEl('a_svh2', fmt(r.svh_in2)); setEl('a_svh3', fmt(r.svh_out));
     setEl('svh_in', fmt(r.svh_in)); setEl('svh_out', fmt(r.svh_out));
     const svhNetEl = document.getElementById('svh_net');
     svhNetEl.textContent = fmt(r.svh_net);
@@ -977,8 +966,7 @@
     svDeltaEl.className = 'net-delta ' + (r.sv_delta >= 0 ? 'pos' : 'neg');
 
     // RC franchise
-    setEl('a_rcf1', fmt(r.rcf_in1)); setEl('a_rcf2', fmt(r.rcf_in2));
-    setEl('a_rcf3', fmt(r.rcf_out));
+    setEl('a_rcf1', fmt(r.rcf_in1)); setEl('a_rcf2', fmt(r.rcf_in2)); setEl('a_rcf3', fmt(r.rcf_out));
     setEl('rcf_in', fmt(r.rcf_in)); setEl('rcf_out', fmt(r.rcf_out));
     const rcfNetEl = document.getElementById('rcf_net');
     rcfNetEl.textContent = fmt(r.rcf_net);
@@ -987,120 +975,107 @@
     rcDeltaEl.textContent = fmtDelta(r.rc_delta) + ' (' + pct(r.rc_dpct) + ') vs. standard';
     rcDeltaEl.className = 'net-delta ' + (r.rc_delta >= 0 ? 'pos' : 'neg');
 
-    // Model summary rows
+    // Model summaries
     const std_combined = r.svh_net + r.rch_net;
     const frn_combined = r.svf_net + r.rcf_net;
     const comb_delta   = frn_combined - std_combined;
 
     const mssvh = document.getElementById('ms_svh_net');
-    mssvh.textContent = fmt(r.svh_net);
-    mssvh.className = 'ms-value ' + (r.svh_net >= 0 ? 'pos' : 'neg');
-
+    mssvh.textContent = fmt(r.svh_net); mssvh.className = 'ms-value ' + (r.svh_net >= 0 ? 'pos' : 'neg');
     const msrch = document.getElementById('ms_rch_net');
-    msrch.textContent = fmt(r.rch_net);
-    msrch.className = 'ms-value ' + (r.rch_net >= 0 ? 'pos' : 'neg');
-
+    msrch.textContent = fmt(r.rch_net); msrch.className = 'ms-value ' + (r.rch_net >= 0 ? 'pos' : 'neg');
     const msstd = document.getElementById('ms_std_combined');
-    msstd.textContent = fmt(std_combined);
-    msstd.className = 'ms-value ' + (std_combined >= 0 ? 'pos' : 'neg');
+    msstd.textContent = fmt(std_combined); msstd.className = 'ms-value ' + (std_combined >= 0 ? 'pos' : 'neg');
 
     const mssvf = document.getElementById('ms_svf_net');
-    mssvf.textContent = fmt(r.svf_net);
-    mssvf.className = 'ms-value ' + (r.svf_net >= 0 ? 'pos' : 'neg');
-
+    mssvf.textContent = fmt(r.svf_net); mssvf.className = 'ms-value ' + (r.svf_net >= 0 ? 'pos' : 'neg');
     const mssvdEl = document.getElementById('ms_sv_delta');
     mssvdEl.textContent = fmtDelta(r.sv_delta) + ' vs. standard';
     mssvdEl.className = 'ms-delta ' + (r.sv_delta >= 0 ? 'pos' : 'neg');
-
     const msrcf = document.getElementById('ms_rcf_net');
-    msrcf.textContent = fmt(r.rcf_net);
-    msrcf.className = 'ms-value ' + (r.rcf_net >= 0 ? 'pos' : 'neg');
-
+    msrcf.textContent = fmt(r.rcf_net); msrcf.className = 'ms-value ' + (r.rcf_net >= 0 ? 'pos' : 'neg');
     const msrcdEl = document.getElementById('ms_rc_delta');
     msrcdEl.textContent = fmtDelta(r.rc_delta) + ' vs. standard';
     msrcdEl.className = 'ms-delta ' + (r.rc_delta >= 0 ? 'pos' : 'neg');
-
     const msfrn = document.getElementById('ms_frn_combined');
-    msfrn.textContent = fmt(frn_combined);
-    msfrn.className = 'ms-value ' + (frn_combined >= 0 ? 'pos' : 'neg');
-
+    msfrn.textContent = fmt(frn_combined); msfrn.className = 'ms-value ' + (frn_combined >= 0 ? 'pos' : 'neg');
     const mscombEl = document.getElementById('ms_comb_delta');
     mscombEl.textContent = fmtDelta(comb_delta) + ' combined';
     mscombEl.className = 'ms-delta ' + (comb_delta >= 0 ? 'pos' : 'neg');
 
-    // Global summary strip
+    // Summary strip
     const sumSvEl = document.getElementById('sum_sv_delta');
     sumSvEl.textContent = fmtDelta(r.sv_delta);
     sumSvEl.style.color = r.sv_delta >= 0 ? '#6ee7b7' : '#fca5a5';
+
+    const sumSvNetEl = document.getElementById('sum_sv_net');
+    sumSvNetEl.textContent = fmt(r.svf_net);
+    sumSvNetEl.style.color = r.svf_net >= 0 ? '#6ee7b7' : '#fca5a5';
 
     const sumRcEl = document.getElementById('sum_rc_delta');
     sumRcEl.textContent = fmtDelta(r.rc_delta);
     sumRcEl.style.color = r.rc_delta >= 0 ? '#6ee7b7' : '#fca5a5';
 
-    document.getElementById('sum_breakeven').textContent = r.breakeven <= 0 ? 'Immediate' : r.breakeven + ' cases';
     document.getElementById('sum_rc_annual').textContent = fmt(r.rc_delta * 12);
 
-    // Refresh KPI subtitle on active tab live
-    const tabBar = document.getElementById('tab-bar');
-    const tabBtns = tabBar.querySelectorAll('.tab-btn');
-    tabBtns.forEach((btn, i) => {
-      const kpisEl = btn.querySelector('.tab-kpis');
-      if (kpisEl) kpisEl.textContent = kpiLabel(scenarios[i]);
+    // RC peek
+    setEl('peek_rch_net', fmt(r.rch_net));
+    setEl('peek_rcf_net', fmt(r.rcf_net));
+    const peekDelta = document.getElementById('peek_rc_delta');
+    peekDelta.textContent = fmtDelta(r.rc_delta);
+    peekDelta.style.color = r.rc_delta >= 0 ? '#6ee7b7' : '#fca5a5';
+    setEl('peek_rc_annual', fmt(r.rc_delta * 12));
+
+    // Refresh KPI subtitles
+    document.querySelectorAll('.tab-kpis').forEach((el, i) => {
+      if (scenarios[i]) el.textContent = kpiLabel(scenarios[i]);
     });
 
     renderCompare();
   }
 
-  // ── Scenario comparison table ─────────────────────────────────────────────
+  // ── Comparison table ──────────────────────────────────────────────────────
   function renderCompare() {
     const section = document.getElementById('compare-section');
     const table   = document.getElementById('compare-table');
-
-    if (scenarios.length < 2) {
-      section.style.display = 'none';
-      return;
-    }
+    if (scenarios.length < 2) { section.style.display = 'none'; return; }
     section.style.display = 'block';
 
     const rows = scenarios.map((s, i) => ({ idx: i, s, r: computeScenario(s) }));
 
     table.innerHTML = `
-      <thead>
-        <tr>
-          <th>Scenario</th>
-          <th>Revenue share</th>
-          <th>SV standard net</th>
-          <th>SV franchise net</th>
-          <th>SV delta</th>
-          <th>RC standard net</th>
-          <th>RC franchise net</th>
-          <th>RC delta</th>
-        </tr>
-      </thead>
+      <thead><tr>
+        <th>Scenario</th>
+        <th>RS %</th>
+        <th>SV standard net</th>
+        <th>SV franchise net</th>
+        <th>SV delta</th>
+        <th class="rc-col">RC standard net</th>
+        <th class="rc-col">RC franchise net</th>
+        <th class="rc-col">RC delta</th>
+      </tr></thead>
       <tbody>
         ${rows.map(({ idx, s, r }) => `
           <tr class="${idx === active ? 'active-row' : ''}">
-            <td><input class="name-edit" value="${s.name.replace(/"/g,'&quot;')}" title="Click to rename" onchange="renameScenario(${idx}, this.value)" onblur="renameScenario(${idx}, this.value)"></td>
+            <td><input class="name-edit" value="${s.name.replace(/"/g,'&quot;')}"
+              onchange="renameScenario(${idx}, this.value)"
+              onblur="renameScenario(${idx}, this.value)"></td>
             <td>${s.rs}%</td>
             <td class="${r.svh_net >= 0 ? 'pos' : 'neg'}">${fmt(r.svh_net)}</td>
             <td class="${r.svf_net >= 0 ? 'pos' : 'neg'}">${fmt(r.svf_net)}</td>
             <td class="delta-cell ${r.sv_delta >= 0 ? 'pos' : 'neg'}">${fmtDelta(r.sv_delta)}</td>
-            <td class="${r.rch_net >= 0 ? 'pos' : 'neg'}">${fmt(r.rch_net)}</td>
-            <td class="${r.rcf_net >= 0 ? 'pos' : 'neg'}">${fmt(r.rcf_net)}</td>
-            <td class="delta-cell ${r.rc_delta >= 0 ? 'pos' : 'neg'}">${fmtDelta(r.rc_delta)}</td>
-          </tr>
-        `).join('')}
-      </tbody>
-    `;
+            <td class="rc-col ${r.rch_net >= 0 ? 'pos' : 'neg'}">${fmt(r.rch_net)}</td>
+            <td class="rc-col ${r.rcf_net >= 0 ? 'pos' : 'neg'}">${fmt(r.rcf_net)}</td>
+            <td class="rc-col delta-cell ${r.rc_delta >= 0 ? 'pos' : 'neg'}">${fmtDelta(r.rc_delta)}</td>
+          </tr>`).join('')}
+      </tbody>`;
   }
 
-  // ── Rename from comparison table ─────────────────────────────────────────
   function renameScenario(idx, name) {
     scenarios[idx].name = name.trim() || ('Scenario ' + (idx + 1));
     renderTabs();
   }
 
-  // ── Revenue share toggle ──────────────────────────────────────────────────
   function setRS(val) {
     scenarios[active].rs = val;
     [10, 15, 20, 25].forEach(v =>
@@ -1109,7 +1084,6 @@
     calc();
   }
 
-  // ── Init ──────────────────────────────────────────────────────────────────
   renderTabs();
   calc();
 </script>
