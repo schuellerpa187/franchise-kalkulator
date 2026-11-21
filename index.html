@@ -244,6 +244,8 @@
   .bar-out2 { background: #fca5a5; }
   .bar-rc-in1 { background: #3b82f6; }
   .bar-rc-in2 { background: #93c5fd; }
+  .bar-in3 { background: #8b5cf6; }
+  .bar-rc-in3 { background: #c4b5fd; }
   .flow-amount { font-size: 0.75rem; font-weight: 600; min-width: 60px; text-align: right; }
   .flow-amount.red { color: #dc2626; }
   .flow-amount.green { color: #059669; }
@@ -379,7 +381,7 @@
       <div class="field">
         <label>Backoffice-Einsparung (RC übernimmt)</label>
         <div class="field-row">
-          <input type="number" id="bo" value="40" min="0" max="100" step="5" oninput="calc()">
+          <input type="number" id="bo" value="100" min="0" max="100" step="5" oninput="calc()">
           <span class="suffix">% der Kosten</span>
         </div>
         <div class="hint">z.B. 40% = RC übernimmt Admin, Rechnungsstellung, Marketing</div>
@@ -392,16 +394,16 @@
       <div class="field">
         <label>RC-Fälle/Monat heute (je 150 €)</label>
         <div class="field-row">
-          <input type="number" id="rch" value="24" min="0" oninput="calc()">
+          <input type="number" id="rch" value="6" min="0" oninput="calc()">
           <span class="suffix">Fälle</span>
         </div>
-        <div class="hint pres-hide">Ruslan-Benchmark: 24 / Monat (6 / Woche)</div>
+        <div class="hint pres-hide">Ø aktiver SV: 6 / Mon. · Top-Performer Ruslan: 24 / Mon.</div>
       </div>
 
       <div class="field">
         <label>RC-Bruttowert pro Fall</label>
         <div class="field-row">
-          <input type="number" id="rcw" value="500" min="0" step="50" oninput="calc()">
+          <input type="number" id="rcw" value="450" min="0" step="50" oninput="calc()">
           <span class="suffix">€</span>
         </div>
         <div class="hint">Was RC von der Versicherung erhält, vor SV-Vergütung</div>
@@ -424,15 +426,46 @@
       <div class="field">
         <label>RC-Fälle/Monat (Franchise, je 250 €)</label>
         <div class="field-row">
-          <input type="number" id="rcf" value="24" min="0" oninput="calc()">
+          <input type="number" id="rcf" value="12" min="0" oninput="calc()">
           <span class="suffix">Fälle</span>
         </div>
-        <div class="hint">Was RC zusagt zu liefern</div>
+        <div class="hint">Realistisches Ziel: 10–12 / Mon. · Ruslan-Level: 24</div>
       </div>
 
       <div class="ratio-callout">
         <span class="ratio-big" id="ratio-big">—</span>
         <span class="ratio-sub" id="ratio-sub">—</span>
+      </div>
+
+      <div class="rc-only" style="border-top:1px solid #f3f4f6;margin-top:1.1rem;padding-top:1rem">
+        <div class="card-title" style="color:#7c3aed;margin-bottom:0.75rem">Kanzlei-Provision (intern)</div>
+
+        <div class="field">
+          <label>Provision je Fall (Kanzlei → RC)</label>
+          <div class="field-row">
+            <input type="number" id="anwProv" value="175" min="0" step="25" oninput="calc()">
+            <span class="suffix">€</span>
+          </div>
+        </div>
+
+        <div class="field">
+          <label>Fälle via Kanzlei</label>
+          <div class="field-row">
+            <input type="number" id="anwAnteil" value="80" min="0" max="100" step="5" oninput="calc()">
+            <span class="suffix">%</span>
+          </div>
+          <div class="hint">Schätzung: ~80 % der Kunden wollen Anwalt</div>
+        </div>
+
+        <div class="field">
+          <label>RC-Anteil an Provision</label>
+          <div class="seg-group">
+            <button class="seg-btn" onclick="setAnwSplit(0)" id="anwS0">0% RC</button>
+            <button class="seg-btn active" onclick="setAnwSplit(50)" id="anwS50">50 / 50</button>
+            <button class="seg-btn" onclick="setAnwSplit(100)" id="anwS100">100% RC</button>
+          </div>
+          <div class="hint" id="anw-hint" style="color:#7c3aed">—</div>
+        </div>
       </div>
     </div>
 
@@ -552,6 +585,11 @@
               <div class="flow-bar-track"><div class="flow-bar bar-in2" id="b_svf2"></div></div>
               <span class="flow-amount green" id="a_svf2">—</span>
             </div>
+            <div class="flow-item">
+              <span class="flow-name">Anwaltsvermittlung</span>
+              <div class="flow-bar-track"><div class="flow-bar bar-in3" id="b_svf_anw"></div></div>
+              <span class="flow-amount green" id="a_svf_anw">—</span>
+            </div>
             <div class="flow-subtotal"><span>Gesamt ein</span><span id="svf_in">—</span></div>
           </div>
           <div class="flow-section">
@@ -593,6 +631,11 @@
               <span class="flow-name">Fälle (brutto)</span>
               <div class="flow-bar-track"><div class="flow-bar bar-rc-in2" id="b_rcf2"></div></div>
               <span class="flow-amount green" id="a_rcf2">—</span>
+            </div>
+            <div class="flow-item rc-only">
+              <span class="flow-name">Kanzlei-Provision</span>
+              <div class="flow-bar-track"><div class="flow-bar bar-rc-in3" id="b_rcf_anw"></div></div>
+              <span class="flow-amount green" id="a_rcf_anw">—</span>
             </div>
             <div class="flow-subtotal"><span>Gesamt ein</span><span id="rcf_in">—</span></div>
           </div>
@@ -678,7 +721,7 @@
 </div>
 
 <script>
-  const DEFAULT = { ef:10, au:1000, ek:1500, ek_mode:'fixed', bo:100, rch:10, rcw:450, rcf:10, rs:20 };
+  const DEFAULT = { ef:10, au:1200, ek:1500, ek_mode:'fixed', bo:100, rch:6, rcw:450, rcf:12, rs:20, anwProv:175, anwAnteil:80, anwRcSplit:50 };
 
   let scenarios = [{ name: 'Szenario 1', ...DEFAULT }];
   let active = 0;
@@ -733,6 +776,9 @@
       rcw:      Math.max(0, +document.getElementById('rcw').value || 0),
       rcf:      Math.max(0, +document.getElementById('rcf').value || 0),
       rs:       scenarios[active].rs,
+      anwProv:    Math.max(0, +document.getElementById('anwProv').value   || 175),
+      anwAnteil:  Math.min(100, Math.max(0, +document.getElementById('anwAnteil').value || 80)),
+      anwRcSplit: scenarios[active].anwRcSplit ?? 50,
     };
   }
 
@@ -750,6 +796,12 @@
     document.getElementById('ek-suffix').textContent = mode === 'fixed' ? '€ / Mon.' : '% vom Umsatz';
     [10, 15, 20, 25].forEach(v =>
       document.getElementById('rs' + v).classList.toggle('active', v === s.rs)
+    );
+    document.getElementById('anwProv').value   = s.anwProv   ?? 175;
+    document.getElementById('anwAnteil').value = s.anwAnteil ?? 80;
+    const aSplit = s.anwRcSplit ?? 50;
+    [0, 50, 100].forEach(v =>
+      document.getElementById('anwS' + v).classList.toggle('active', v === aSplit)
     );
   }
 
@@ -858,13 +910,21 @@
     const rsAmt = um * s.rs / 100;
     const ekF   = Math.max(0, ek - bo);
 
+    const anwProv    = Math.max(0, s.anwProv ?? 175);
+    const anwAnteil  = Math.min(100, Math.max(0, s.anwAnteil ?? 80));
+    const anwRcSplit = Math.min(100, Math.max(0, s.anwRcSplit ?? 50));
+    const anwCases   = (ef + rcf) * anwAnteil / 100;
+    const anwTotal   = anwCases * anwProv;
+    const anwRC      = anwTotal * anwRcSplit / 100;
+    const anwSV      = anwTotal * (1 - anwRcSplit / 100);
+
     const svh_in1 = um,       svh_in2 = rch * 150;
     const svh_in  = svh_in1 + svh_in2;
     const svh_out = ek;
     const svh_net = svh_in - svh_out;
 
-    const svf_in1 = um,       svf_in2 = rcf * 250;
-    const svf_in  = svf_in1 + svf_in2;
+    const svf_in1 = um,       svf_in2 = rcf * 250, svf_in3 = anwSV;
+    const svf_in  = svf_in1 + svf_in2 + svf_in3;
     const svf_out1 = rsAmt,   svf_out2 = ekF;
     const svf_out  = svf_out1 + svf_out2;
     const svf_net  = svf_in - svf_out;
@@ -873,8 +933,8 @@
     const rch_out = rch * 150;
     const rch_net = rch_in - rch_out;
 
-    const rcf_in1 = rsAmt,    rcf_in2 = rcf * rcw;
-    const rcf_in  = rcf_in1 + rcf_in2;
+    const rcf_in1 = rsAmt,    rcf_in2 = rcf * rcw, rcf_in3 = anwRC;
+    const rcf_in  = rcf_in1 + rcf_in2 + rcf_in3;
     const rcf_out = rcf * 250;
     const rcf_net = rcf_in - rcf_out;
 
@@ -888,10 +948,11 @@
 
     return {
       ek, um, rsAmt, ekF, bo,
+      anwTotal, anwRC, anwSV, anwCases,
       svh_in1, svh_in2, svh_in, svh_out, svh_net,
-      svf_in1, svf_in2, svf_in, svf_out1, svf_out2, svf_out, svf_net,
+      svf_in1, svf_in2, svf_in3, svf_in, svf_out1, svf_out2, svf_out, svf_net,
       rch_in, rch_out, rch_net,
-      rcf_in1, rcf_in2, rcf_in, rcf_out, rcf_net,
+      rcf_in1, rcf_in2, rcf_in3, rcf_in, rcf_out, rcf_net,
       sv_delta, rc_delta, sv_dpct, rc_dpct, breakeven,
       sv_scale, rc_scale,
     };
@@ -933,12 +994,14 @@
     document.getElementById('b_svh3').style.width = bar(r.svh_out, r.sv_scale);
     document.getElementById('b_svf1').style.width = bar(r.svf_in1, r.sv_scale);
     document.getElementById('b_svf2').style.width = bar(r.svf_in2, r.sv_scale);
+    document.getElementById('b_svf_anw').style.width = bar(r.svf_in3, r.sv_scale);
     document.getElementById('b_svf3').style.width = bar(r.svf_out1, r.sv_scale);
     document.getElementById('b_svf4').style.width = bar(r.svf_out2, r.sv_scale);
     document.getElementById('b_rch1').style.width = bar(r.rch_in, r.rc_scale);
     document.getElementById('b_rch2').style.width = bar(r.rch_out, r.rc_scale);
     document.getElementById('b_rcf1').style.width = bar(r.rcf_in1, r.rc_scale);
     document.getElementById('b_rcf2').style.width = bar(r.rcf_in2, r.rc_scale);
+    document.getElementById('b_rcf_anw').style.width = bar(r.rcf_in3, r.rc_scale);
     document.getElementById('b_rcf3').style.width = bar(r.rcf_out, r.rc_scale);
 
     // SV standard
@@ -954,6 +1017,13 @@
     const rchNetEl = document.getElementById('rch_net');
     rchNetEl.textContent = fmt(r.rch_net);
     rchNetEl.className = 'net-amount ' + (r.rch_net >= 0 ? 'pos' : 'neg');
+
+    // Kanzlei-Provision amounts + hint
+    setEl('a_svf_anw', fmt(r.svf_in3));
+    setEl('a_rcf_anw', fmt(r.rcf_in3));
+    setEl('anw-hint', r.anwCases > 0
+      ? `RC: ${fmt(r.anwRC)} · SV: ${fmt(r.anwSV)} / Mon. (${r.anwCases.toFixed(1)} Fälle)`
+      : 'Fälle via Kanzlei eintragen');
 
     // SV franchise
     setEl('a_svf1', fmt(r.svf_in1)); setEl('a_svf2', fmt(r.svf_in2));
@@ -1075,6 +1145,14 @@
   function renameScenario(idx, name) {
     scenarios[idx].name = name.trim() || ('Szenario ' + (idx + 1));
     renderTabs();
+  }
+
+  function setAnwSplit(val) {
+    scenarios[active].anwRcSplit = val;
+    [0, 50, 100].forEach(v =>
+      document.getElementById('anwS' + v).classList.toggle('active', v === val)
+    );
+    calc();
   }
 
   function setRS(val) {
