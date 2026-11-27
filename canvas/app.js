@@ -261,8 +261,82 @@ function renderCanvas() {
   });
   renderHeads();
 }
+/* ================= Geldfluss-Diagramm ================= */
+function renderGeldfluss() {
+  const wrap = document.getElementById('geldfluss-diagram');
+  if (!wrap) return;
+  wrap.innerHTML = `
+<svg viewBox="0 0 760 230" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:760px;display:block;margin:0 auto 1.5rem;font-family:Inter,sans-serif">
+  <defs>
+    <marker id="gf-a" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0,8 3,0 6" fill="#9CA3AF"/></marker>
+    <marker id="gf-g" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0,8 3,0 6" fill="#059669"/></marker>
+    <marker id="gf-o" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0,8 3,0 6" fill="#D97706"/></marker>
+  </defs>
+
+  <!-- Kunden label -->
+  <text x="75" y="13" text-anchor="middle" font-size="10" font-weight="700" fill="#6B7280" letter-spacing=".08em">KUNDEN</text>
+  <!-- RC label -->
+  <text x="380" y="13" text-anchor="middle" font-size="10" font-weight="700" fill="#2563EB" letter-spacing=".08em">REPAIRCHECK</text>
+  <!-- Partner label -->
+  <text x="685" y="13" text-anchor="middle" font-size="10" font-weight="700" fill="#6B7280" letter-spacing=".08em">PARTNER</text>
+
+  <!-- Typ 1 -->
+  <rect x="10" y="20" width="130" height="40" rx="7" fill="#ECFDF5" stroke="#10B981" stroke-width="1.5"/>
+  <text x="75" y="37" text-anchor="middle" font-size="12" font-weight="700" fill="#065F46">Typ 1</text>
+  <text x="75" y="52" text-anchor="middle" font-size="10" fill="#6B7280">Der Einsteiger</text>
+
+  <!-- Typ 4 -->
+  <rect x="10" y="95" width="130" height="40" rx="7" fill="#FEF2F2" stroke="#EF4444" stroke-width="1.5"/>
+  <text x="75" y="112" text-anchor="middle" font-size="12" font-weight="700" fill="#991B1B">Typ 4</text>
+  <text x="75" y="127" text-anchor="middle" font-size="10" fill="#6B7280">Qual. ausbaufähig</text>
+
+  <!-- Typ 3 (Kunde) -->
+  <rect x="10" y="170" width="130" height="48" rx="7" fill="#FFFBEB" stroke="#F59E0B" stroke-width="2" stroke-dasharray="5,3"/>
+  <text x="75" y="188" text-anchor="middle" font-size="12" font-weight="700" fill="#92400E">Typ 3</text>
+  <text x="75" y="203" text-anchor="middle" font-size="10" fill="#6B7280">als Kunde</text>
+  <text x="75" y="214" text-anchor="middle" font-size="9" fill="#D97706">zahlt für Services</text>
+
+  <!-- RC box -->
+  <rect x="295" y="72" width="170" height="90" rx="10" fill="#EFF6FF" stroke="#2563EB" stroke-width="2"/>
+  <text x="380" y="110" text-anchor="middle" font-size="13" font-weight="700" fill="#1E40AF">Repaircheck</text>
+  <text x="380" y="128" text-anchor="middle" font-size="10" fill="#6B7280">nimmt Servicegebühren ein</text>
+  <text x="380" y="143" text-anchor="middle" font-size="10" fill="#6B7280">vergütet Partner pro Fall</text>
+
+  <!-- Typ 2 -->
+  <rect x="620" y="34" width="130" height="48" rx="7" fill="#ECFDF5" stroke="#059669" stroke-width="1.5"/>
+  <text x="685" y="52" text-anchor="middle" font-size="12" font-weight="700" fill="#065F46">Typ 2</text>
+  <text x="685" y="67" text-anchor="middle" font-size="10" fill="#6B7280">Der Etablierte</text>
+  <text x="685" y="78" text-anchor="middle" font-size="9" fill="#059669">erhält € pro Fall</text>
+
+  <!-- Typ 3 (Partner) -->
+  <rect x="620" y="152" width="130" height="48" rx="7" fill="#FFFBEB" stroke="#F59E0B" stroke-width="2" stroke-dasharray="5,3"/>
+  <text x="685" y="170" text-anchor="middle" font-size="12" font-weight="700" fill="#92400E">Typ 3</text>
+  <text x="685" y="185" text-anchor="middle" font-size="10" fill="#6B7280">als Partner</text>
+  <text x="685" y="196" text-anchor="middle" font-size="9" fill="#D97706">erhält € pro Fall</text>
+
+  <!-- Arrows: Kunden → RC -->
+  <path d="M140,40 C210,40 230,100 293,105" stroke="#9CA3AF" stroke-width="1.5" fill="none" marker-end="url(#gf-a)"/>
+  <text x="215" y="62" text-anchor="middle" font-size="9" fill="#9CA3AF">€</text>
+
+  <path d="M140,115 L292,117" stroke="#9CA3AF" stroke-width="1.5" fill="none" marker-end="url(#gf-a)"/>
+  <text x="215" y="109" text-anchor="middle" font-size="9" fill="#9CA3AF">€</text>
+
+  <path d="M140,194 C210,194 230,145 293,132" stroke="#D97706" stroke-width="1.5" fill="none" stroke-dasharray="5,3" marker-end="url(#gf-o)"/>
+  <text x="215" y="186" text-anchor="middle" font-size="9" fill="#D97706">€</text>
+
+  <!-- Arrows: RC → Partner -->
+  <path d="M465,100 C530,100 560,65 618,62" stroke="#059669" stroke-width="2" fill="none" marker-end="url(#gf-g)"/>
+  <text x="543" y="72" text-anchor="middle" font-size="9" fill="#059669">€ pro Fall</text>
+
+  <path d="M465,140 C530,140 560,170 618,172" stroke="#D97706" stroke-width="1.5" fill="none" stroke-dasharray="5,3" marker-end="url(#gf-o)"/>
+  <text x="543" y="168" text-anchor="middle" font-size="9" fill="#D97706">€ pro Fall</text>
+</svg>
+<p style="text-align:center;font-size:.75rem;color:#9CA3AF;margin:0 0 1.5rem">Gestrichelt = Typ 3 ist gleichzeitig Kunde (zahlt RC) und Partner (erhält Fallvergütung)</p>`;
+}
+
 /* ================= Track-Modell (Tab 2) ================= */
 function renderTracks() {
+  renderGeldfluss();
   const wrap = document.getElementById('tracks');
   if (!wrap) return;
   wrap.innerHTML = '';
