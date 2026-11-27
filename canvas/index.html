@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Partnermodelle Canvas · Repaircheck</title>
+<style>
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; padding: 2rem;
+    font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    background: #F9FAFB; color: #1F2937;
+  }
+  header.top {
+    display: flex; justify-content: space-between; align-items: flex-end;
+    gap: 1rem; flex-wrap: wrap; margin-bottom: 1.5rem;
+  }
+  h1 { margin: 0; font-size: 1.6rem; }
+  .sub { color: #6B7280; margin-top: .25rem; font-size: .95rem; }
+  .toolbar { display: flex; gap: .5rem; flex-wrap: wrap; }
+  .toolbar button, .toolbar label {
+    border: 1px solid #E5E7EB; background: #FFFFFF; color: #1F2937;
+    border-radius: .5rem; padding: .5rem .8rem; font: inherit; font-size: .85rem;
+    cursor: pointer;
+  }
+  .toolbar button:hover, .toolbar label:hover { background: #F3F4F6; }
+  .toolbar .danger { color: #B91C1C; }
+  .toolbar input[type=file] { display: none; }
+
+  /* ---------- Persona-Karten ---------- */
+  .personas {
+    display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem;
+    margin-bottom: 2rem;
+  }
+  .persona {
+    background: #FFFFFF; border-radius: .75rem; padding: 1.25rem;
+    box-shadow: 0 1px 3px rgba(0,0,0,.1); border-top: 5px solid var(--c);
+    display: flex; flex-direction: column; gap: .6rem;
+  }
+  .persona .tag {
+    font-size: .75rem; font-weight: 700; text-transform: uppercase;
+    letter-spacing: .05em; color: var(--c);
+  }
+  .persona h2 { margin: 0; font-size: 1.15rem; }
+  .persona .desc { color: #4B5563; font-size: .9rem; line-height: 1.5; margin: 0; }
+  .persona .desc:focus, .persona h2:focus, [contenteditable]:focus {
+    outline: 2px solid #93C5FD; border-radius: .25rem;
+  }
+  .meters { display: grid; gap: .35rem; margin-top: .25rem; }
+  .meter { display: grid; grid-template-columns: 7.5rem 1fr; align-items: center; font-size: .78rem; color: #6B7280; }
+  .dots { display: flex; gap: 3px; }
+  .dots span {
+    width: 100%; height: 7px; border-radius: 4px; background: #E5E7EB; cursor: pointer;
+  }
+  .dots span.on { background: var(--c); }
+  .persona .facts { margin: .25rem 0 0; padding-left: 1.1rem; color: #4B5563; font-size: .85rem; line-height: 1.5; }
+
+  /* ---------- Canvas ---------- */
+  h3.section { font-size: 1.1rem; margin: 0 0 .25rem; }
+  .hint { color: #6B7280; font-size: .85rem; margin: 0 0 1rem; }
+  .canvas {
+    display: grid;
+    grid-template-columns: 11rem repeat(4, 1fr) 1.15fr;
+    gap: .5rem; margin-bottom: 2.5rem;
+  }
+  .colhead {
+    font-weight: 700; font-size: .85rem; padding: .5rem .6rem; border-radius: .5rem;
+    background: var(--c); color: #FFFFFF; position: sticky; top: 0; z-index: 2;
+  }
+  .colhead.kern { background: #1F2937; }
+  .rowhead {
+    background: #F3F4F6; border-radius: .5rem; padding: .6rem;
+    font-size: .85rem; font-weight: 600; color: #1F2937;
+  }
+  .rowhead small { display: block; font-weight: 400; color: #6B7280; margin-top: .25rem; line-height: 1.35; }
+  .cell {
+    background: #FFFFFF; border: 1px solid #E5E7EB; border-radius: .5rem;
+    min-height: 5.5rem; padding: .45rem; display: flex; flex-direction: column; gap: .35rem;
+    position: relative;
+  }
+  .cell.kern { background: #FFFBEB; border-color: #FCD34D; }
+  .cell.over { outline: 2px dashed #2563EB; outline-offset: -2px; background: #EFF6FF; }
+  .cell .add {
+    margin-top: auto; align-self: flex-start; border: none; background: none;
+    color: #9CA3AF; font: inherit; font-size: .8rem; cursor: pointer; padding: .1rem .2rem;
+  }
+  .cell .add:hover { color: #2563EB; }
+  .cell:empty::before, .cell .placeholder {
+    color: #9CA3AF; font-size: .78rem; font-style: italic; line-height: 1.35;
+  }
+
+  .note {
+    background: var(--bg, #FEF3C7); border-left: 4px solid var(--c, #F59E0B);
+    border-radius: .35rem; padding: .4rem 1.4rem .4rem .5rem; font-size: .82rem; line-height: 1.4;
+    box-shadow: 0 1px 2px rgba(0,0,0,.08); cursor: grab; position: relative;
+    white-space: pre-wrap; word-break: break-word;
+  }
+  .note.dragging { opacity: .4; }
+  .note .txt { outline: none; display: block; min-height: 1em; }
+  .note .del {
+    position: absolute; top: .15rem; right: .25rem; border: none; background: none;
+    color: #9CA3AF; cursor: pointer; font-size: .9rem; line-height: 1; display: none;
+  }
+  .note:hover .del { display: block; }
+  .note .vote {
+    display: inline-block; margin-top: .25rem; font-size: .72rem; color: #6B7280;
+    border: 1px solid #E5E7EB; background: #FFFFFF; border-radius: 1rem; padding: 0 .45rem; cursor: pointer;
+  }
+  .note .vote.has { color: #1E40AF; border-color: #93C5FD; background: #EFF6FF; }
+
+  /* ---------- Modell-Entwurf ---------- */
+  .model {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin-bottom: 2rem;
+  }
+  .model .block {
+    background: #FFFFFF; border-radius: .75rem; box-shadow: 0 1px 3px rgba(0,0,0,.1);
+    padding: 1rem; display: flex; flex-direction: column; gap: .5rem;
+  }
+  .model .block h4 { margin: 0; font-size: .95rem; }
+  .model .block p { margin: 0; color: #6B7280; font-size: .8rem; line-height: 1.4; }
+  .model .block .cell { min-height: 7rem; }
+  .model .wide { grid-column: span 3; }
+
+  .legend { display: flex; gap: 1rem; flex-wrap: wrap; font-size: .8rem; color: #6B7280; margin-bottom: .75rem; }
+  .legend span::before {
+    content: ""; display: inline-block; width: .7rem; height: .7rem; border-radius: .15rem;
+    background: var(--c); margin-right: .35rem; vertical-align: -1px;
+  }
+  .saved { font-size: .75rem; color: #9CA3AF; align-self: center; }
+  .saved.live { color: #047857; font-weight: 600; }
+  .saved.live::before {
+    content: ""; display: inline-block; width: .5rem; height: .5rem; border-radius: 50%;
+    background: #10B981; margin-right: .35rem; vertical-align: 1px;
+  }
+  .saved.err { color: #B91C1C; font-weight: 600; }
+
+  @media (max-width: 1100px) {
+    .personas { grid-template-columns: repeat(2, 1fr); }
+    .canvas { grid-template-columns: 9rem repeat(5, minmax(11rem, 1fr)); overflow-x: auto; }
+    .model { grid-template-columns: 1fr; }
+    .model .wide { grid-column: auto; }
+  }
+  /* ---------- Tabs ---------- */
+  .tab-nav {
+    display: flex; border-bottom: 2px solid #E5E7EB; margin-bottom: 1.5rem;
+  }
+  .tab-btn {
+    border: none; background: none; padding: .6rem 1.4rem; font: inherit;
+    font-size: .9rem; font-weight: 600; color: #6B7280; cursor: pointer;
+    border-bottom: 3px solid transparent; margin-bottom: -2px; transition: color .15s;
+  }
+  .tab-btn:hover { color: #1F2937; }
+  .tab-btn.active { color: #2563EB; border-bottom-color: #2563EB; }
+  .tab-content { display: none; }
+  .tab-content.active { display: block; }
+
+  /* ---------- Track-Layout (Tab 2) ---------- */
+  .tracks-grid {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 2rem;
+  }
+  .track-col {
+    border-radius: .75rem; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,.1);
+  }
+  .track-head { background: var(--tc); color: #FFF; padding: 1rem 1.25rem; }
+  .track-name { font-size: 1.1rem; font-weight: 700; margin-bottom: .2rem; }
+  .track-dir { font-size: .78rem; opacity: .85; font-weight: 600; margin-bottom: .3rem; }
+  .track-sub { font-size: .85rem; opacity: .9; margin: 0; }
+  .tier-card { background: #FFF; border-top: 1px solid #E5E7EB; }
+  .tier-head {
+    padding: .6rem .75rem; display: flex; align-items: flex-start; gap: .6rem;
+    background: var(--tc-bg);
+  }
+  .tier-badge {
+    background: var(--tc); color: #FFF; border-radius: .35rem; padding: .15rem .5rem;
+    font-size: .78rem; font-weight: 700; white-space: nowrap; flex-shrink: 0;
+  }
+  .tier-hint { font-size: .8rem; color: #6B7280; line-height: 1.4; padding-top: .15rem; }
+  .tier-cell { min-height: 4rem; border: none; border-radius: 0; box-shadow: none; }
+  .track-extras { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; }
+  .extra-block {
+    background: #FFF; border-radius: .75rem; padding: 1rem;
+    box-shadow: 0 1px 3px rgba(0,0,0,.1);
+  }
+  .extra-block h4 { margin: 0 0 .2rem; font-size: .95rem; }
+  .extra-hint { color: #6B7280; font-size: .8rem; margin: 0 0 .75rem; line-height: 1.4; }
+  .extra-block .cell { min-height: 5rem; }
+
+  @media (max-width: 1100px) {
+    .tracks-grid { grid-template-columns: 1fr; }
+    .track-extras { grid-template-columns: 1fr; }
+  }
+
+  @media print {
+    body { padding: .5rem; background: #FFFFFF; }
+    .toolbar, .add, .note .del, .tab-nav { display: none !important; }
+    .tab-content { display: block !important; }
+    .colhead { position: static; }
+    .persona, .model .block { box-shadow: none; border: 1px solid #E5E7EB; }
+  }
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div>
+    <h1 contenteditable="true" data-key="title">Partnermodelle: ein Modell für alle Sachverständigen-Typen</h1>
+    <div class="sub" contenteditable="true" data-key="subtitle">Meeting-Canvas · Stand: 26.11.2026</div>
+  </div>
+  <div class="toolbar">
+    <span class="saved" id="saved">Automatisch gespeichert</span>
+    <button id="exportBtn" title="Canvas als JSON-Datei sichern oder weitergeben">Exportieren</button>
+    <label title="Gespeicherten Canvas laden">Importieren<input type="file" id="importFile" accept="application/json"></label>
+    <button onclick="window.print()">Drucken / PDF</button>
+    <button class="danger" id="resetBtn">Zurücksetzen</button>
+  </div>
+</header>
+
+<nav class="tab-nav" id="tabNav">
+  <button class="tab-btn active" data-tab="analyse">Analyse: 4 Typen</button>
+  <button class="tab-btn" data-tab="modell">Modell: Kunden &amp; Partner</button>
+</nav>
+
+<!-- ================= TAB 1: Analyse ================= -->
+<div class="tab-content active" id="tab-analyse">
+
+<section class="personas" id="personas"></section>
+
+<h3 class="section">Canvas: Was braucht jeder Typ, was bringt er uns?</h3>
+<p class="hint">
+  Klick auf <b>+ Notiz</b> fügt eine Karte hinzu, Text direkt anklicken zum Bearbeiten.
+  Karten per Drag &amp; Drop verschieben, zum Beispiel in die Spalte <b>Für alle (Kern)</b>, sobald etwas für mehrere Typen gilt.
+  Der Punkt-Zähler an jeder Karte dient zum Abstimmen.
+</p>
+<div class="legend" id="legend"></div>
+<section class="canvas" id="canvas"></section>
+
+<h3 class="section">Modell-Entwurf: ein Rahmen, der alle vier abdeckt</h3>
+<p class="hint">Hierher wandern die Karten, auf die man sich einigt. Ziel: ein gemeinsamer Kern plus Stufen oder Module statt vier getrennter Modelle.</p>
+<section class="model" id="model"></section>
+
+</div><!-- /tab-analyse -->
+
+<!-- ================= TAB 2: Modell ================= -->
+<div class="tab-content" id="tab-modell">
+  <h3 class="section">Kunden- &amp; Partner-Track</h3>
+  <p class="hint">Zwei unabhängige Tracks. SVs können gleichzeitig in beiden sein (z.&nbsp;B. Typ&nbsp;3). Langfristig entwickeln sich Kunden zu Partnern.</p>
+  <section id="tracks"></section>
+</div><!-- /tab-modell -->
+
+<script src="config.js"></script>
+<script src="supabase.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
